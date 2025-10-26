@@ -185,7 +185,7 @@ For other third-party nuget packages that support package versioning and multipl
 #### Project References
 Project references in multi-target projects work the same way they do in single-target projects with several special requirements.
 
-First, you don't have to specify separate project references for each target framework, but any project references must be to *multi-target projects that target at least the same frameworks that are targeted by the referencing project*.
+First, you don't have to specify separate project references for each target framework, but any project references must be to projects that *multi-target at least the same frameworks that are targeted by the referencing project*. In other words, if your project targets .NET 4.x, .NET 8.0, and .NET 10.0, any project references must be to projects that also multi-target those same framework versions.
 
 ### Environment Variables
 
@@ -425,6 +425,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
