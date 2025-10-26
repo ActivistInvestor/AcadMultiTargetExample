@@ -102,7 +102,7 @@ limited to the following TFMs, depending on what framework versions are
 being targeted:
 
 |Target Framework Moniker|Framework Version|Targeted AutoCAD products|
-|------------------------|-------------------------|
+|------------------|------|-------------------------|
 |`net471`|.NET 4.71|AutoCAD 2020-2024|
 |`net8.0` or `net8.0-windows`|.NET 8.0|AutoCAD 2025 & 2026|
 |`net10.0` or `net10.0-windows`|.NET 10.0|AutoCAD 2027 or later|
@@ -400,3 +400,4 @@ When a multi-target project is built, for each targeted framework version, a dia
 1>Built target for AutoCAD 2025 / .NET v8.0 using references from C:\Program Files\Autodesk\AutoCAD 2025
 1>Built target for AutoCAD 2027 / .NET v10.0 using references from C:\Program Files\Autodesk\AutoCAD 2027
 ```
+
