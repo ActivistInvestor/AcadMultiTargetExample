@@ -254,7 +254,7 @@ include the [System.Memory NuGet package](https://www.nuget.org/packages/system.
 Targeting releases of AutoCAD that use .NET 4.x with the same code base
 that targets .NET 8.0 or later, can be problematic depending on what
 features/functionality the code uses from newer frameworks and language
-versions. With Windows Forms components, the problems increase exponentially.
+versions. With Windows Forms components, the issues increase exponentially.
 
 If you can, avoid targeting older AutoCAD product releases that use .NET
 4.x and you will be free from the restrictions and limitations on code that
@@ -425,6 +425,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
