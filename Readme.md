@@ -143,10 +143,12 @@ that use different framework versions.
 
 #### The Problem
 Unfortunately, Visual Studio and its project architecture provide
-no simple way to reference multiple, framework-specific versions
-of the same assembly in a multi-target project. That can't be done via
-the UI, and requires custom build logic like that provided by the `Directory.Build.props` and `Directory.Build.targets` files included
-in this distribution.
+no way to reference multiple, framework-specific versions of the same 
+assembly in a multi-target project. That can't be done via the UI, 
+and MSBUILD has no formal representation of framework-specific assemblies.
+Hence, getting Visual Studio to use multiple framework-specific assemblies 
+requires custom build logic like that provided by the `Directory.Build.props` 
+and `Directory.Build.targets` files included in this distribution.
 
 When multi-targeting is used with the included `Directory.Build.props` and `Directory.Build.targets` files, you do not have to manually add the same AutoCAD assembly reference to each target framework's References. In fact, *you can't do that* using the Visual Studio UI - when you right-click on the `Dependencies` node (or any framework-specific child node) in a multi-target project and choose *Add Project Reference*, You must select an assembly having a specific path, and Visual Studio adds the assembly reference with a `<HintPath/>` element that specifies that path. By default, and without the use of the custom build logic provided in this distribution, the build will fail, because Visual Studio is using the same physical assembly file for all targeted frameworks.
 
@@ -420,6 +422,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
