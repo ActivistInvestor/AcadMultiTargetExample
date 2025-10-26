@@ -358,7 +358,7 @@ that targets a single framework version to one that targets multiple
 framework versions:
 
 1. If the project is open in Visual Studio, right-click on the
-projet node, and choose *Unload Project* from the context menu.
+project node, and choose *Unload Project* from the context menu.
 
 2. Open the project's .csproj file and change the `<TargetFramework>` 
 element to `<TargetFrameworks>`, and specify the desired framework 
@@ -400,4 +400,5 @@ When a multi-target project is built, for each targeted framework version, a dia
 1>Built target for AutoCAD 2025 / .NET v8.0 using references from C:\Program Files\Autodesk\AutoCAD 2025
 1>Built target for AutoCAD 2027 / .NET v10.0 using references from C:\Program Files\Autodesk\AutoCAD 2027
 ```
+
 
