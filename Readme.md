@@ -21,7 +21,7 @@ Distributed under the terms of the MIT License
     + [Conditional Compilation](#conditional-compilation)
     + [Constants Defined by `Directory.Build.props`](#constants-defined-by--directorybuildprops-)
 - [Multi-targeting Example Project](#multi-targeting-example-project)
-- [Debug Profiles](#--launchsettingsjson---)
+- [Debug Profiles](#debug-profiles)
 - [Converting Existing Projects to use Multi-targeting](#converting-existing-projects-to-use-multi-targeting)
 - [Diagnostic Console Output](#diagnostic-console-output)
 
@@ -339,7 +339,7 @@ The included example project (AcadMultiTargetExample) targets the following fram
 |.NET 8.0|`net8.0-windows`|AutoCAD 2025, 2026|
 |.NET 10.0|`net10.0-windows`|AutoCAD 2027|
 
-## ``launchSettings.json``:
+## Debug Profiles
 
 This example project includes a `launchSettings.json` file (in the
 Properties folder) that configures the project for debugging in Visual
@@ -426,6 +426,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
