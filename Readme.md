@@ -5,7 +5,7 @@ ActivistInvestor \ Tony T
 Distributed under the terms of the MIT License
 
 - [Prerequisites](#prerequisites)
-- [Multi-targeting in C# Projects](#multi-targeting-in-c--projects)
+- [Multi-targeting Overivew](#multi-targeting-overview)
   * [Creating a Project that uses Multi-targeting](#creating-a-project-that-uses-multi-targeting)
   * [Assembly References](#assembly-references-)
     + [The Problem](#the-problem)
@@ -49,7 +49,7 @@ These environment variables are required in order for the build
 logic in the included `Directory.Build.props` file to work correctly.
 Without defining these environment variables, *nothing will work*.
 
-## Multi-targeting in C# Projects
+## Multi-targeting Overivew
 
 [Multi-targeting](https://learn.microsoft.com/en-us/visualstudio/msbuild/net-sdk-multitargeting)
 provides a means for a .NET SDK-style project to target multiple
@@ -420,4 +420,5 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
