@@ -1,0 +1,25 @@
+{
+  "profiles": {
+    "AutoCAD 2020-2024 (.NET 4.71)": {
+      "framework": "net471",
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Autodesk\\AutoCAD 2024\\acad.exe",
+      "commandLineArgs": "/nologo",
+      "workingDirectory": "C:\\Program Files\\Autodesk\\AutoCAD 2024"
+    },
+    "AutoCAD 2025/2026 (.NET 8.0)": {
+      "framework": "net8.0-windows",
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Autodesk\\AutoCAD 2025\\acad.exe",
+      "commandLineArgs": "/nologo",
+      "workingDirectory": "C:\\Program Files\\Autodesk\\AutoCAD 2025"
+    },
+    "AutoCAD 2027 (.NET 10.0)": {
+      "framework": "net10.0-windows",
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Autodesk\\AutoCAD 2027\\acad.exe",
+      "commandLineArgs": "/nologo",
+      "workingDirectory": "C:\\Program Files\\Autodesk\\AutoCAD 2027"
+    }
+  }
+}
