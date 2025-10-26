@@ -1,27 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+
 		<TargetFrameworks>net8.0;net10.0;net471</TargetFrameworks>
+		
+		<!-- The following two properties are set
+		accomodate AutoCAD releases that use .NET 4.0
+		If you're not targeting those releases, you 
+		can set them to enable -->
+		
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
+		
 	</PropertyGroup>
 
 	<!-- Example of a project-specific reference
 	to an AutoCAD assembly. This reference was added
 	using the Visual Studio UI, which generated a
 	<HintPath/> element referencing the AutoCAD 2025
-	version of acdbmgdbrep.dll, which cannot be used
-	with other targeted frameworks.
+	version of acdbmgdbrep.dll (which cannot be used
+	with other targeted frameworks).
 	
 	To solve this problem in a transparent way, the 
 	build logic in the included Directory.Build.*
-	files tells MSBUILD to use the paths they provide
-	for each target framework, and to ignore the value
-	provided in the <HintPath/> element.
+	files tells Visual Studio to use the paths they 
+	provide	for each target framework, and to ignore 
+	the value in the <HintPath/> element.
 	
-	You can remove the <HintPath/> element below to
-	confirm that the correct version of acdbmgdbrep.dll
-	is used with each targeted framework.
+	You can remove the <HintPath/> element below as
+	it is not used, and/or to confirm that the correct 
+	version of acdbmgdbrep.dll is being used with each 
+	targeted framework.
 	
 	-->
 	
