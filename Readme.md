@@ -19,7 +19,7 @@ and 8 AutoCAD product releases that use those frameworks (AutoCAD 2020
 through AutoCAD 2027)
 ## *Prerequisites:*
 
-See the topic below describing ***required environment variables***
+See the topic below describing ***[required environment variables](#environment-variables)***
 that define the locations of reference assemblies for AutoCAD
 releases targeting .NET 4.x, .NET 8.0, and .NET 10.0.
 
@@ -378,3 +378,4 @@ When a multi-target project is built, for each targeted framework version, a dia
 1>Built target for AutoCAD 2025 / .NET v8.0 using references from C:\Program Files\Autodesk\AutoCAD 2025
 1>Built target for AutoCAD 2027 / .NET v10.0 using references from C:\Program Files\Autodesk\AutoCAD 2027
 ```
+
