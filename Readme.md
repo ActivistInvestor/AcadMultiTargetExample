@@ -7,7 +7,7 @@ Distributed under the terms of the MIT License
 - [Prerequisites](#prerequisites)
 - [Introduction to Multi-targeting](#introduction-to-multi-targeting)
   * [Creating a Project that uses Multi-targeting](#creating-a-project-that-uses-multi-targeting)
-  * [Assembly References](#assembly-references-)
+  * [Assembly References](#assembly-references)
     + [The Problem](#the-problem)
     + [The Solution](#the-solution)
     + [Nuget Package References](#nuget-package-references)
@@ -127,7 +127,7 @@ being targeted:
 |`net10.0` or `net10.0-windows`|.NET 10.0|AutoCAD 2027 or later|
 
 
-### Assembly References:
+### Assembly References
 
 When multi-targeting is used, different references can be specified for
 each targeted framework version. In the included example project, under
@@ -420,6 +420,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
