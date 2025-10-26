@@ -4,7 +4,7 @@ ActivistInvestor \ Tony T
 
 Distributed under the terms of the MIT License
 
-- [Prerequisites](#-prerequisites--)
+- [Prerequisites](#prerequisites)
 - [Multi-targeting in C# Projects](#multi-targeting-in-c--projects)
   * [Creating a Project that uses Multi-targeting](#creating-a-project-that-uses-multi-targeting)
   * [Assembly References](#assembly-references-)
@@ -420,3 +420,4 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
