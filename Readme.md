@@ -19,10 +19,8 @@ and 8 AutoCAD product releases that use those frameworks (AutoCAD 2020
 through AutoCAD 2027)
 ## *Prerequisites:*
 
-See the topic below describing ***[required environment variables](#environment-variables)***
-that define the locations of reference assemblies for AutoCAD
+See the topic below describing ***[required environment variables](#environment-variables)*** that define the locations of reference assemblies for AutoCAD
 releases targeting .NET 4.x, .NET 8.0, and .NET 10.0.
-
 These environment variables are required in order for the build
 logic in the included `Directory.Build.props` file to work correctly.
 Without defining these environment variables, *nothing will work*.
@@ -130,9 +128,9 @@ in this distribution.
 When multi-targeting is used with the included `Directory.Build.props` and `Directory.Build.targets` files, you do not have to manually add the same AutoCAD assembly reference to each target framework's References. In fact, *you can't do that* using the Visual Studio UI - when you right-click on the `Dependencies` node (or any framework-specific child node) in a multi-target project and choose *Add Project Reference*, You must select an assembly having a specific path, and Visual Studio adds the assembly reference with a `<HintPath/>` element that specifies that path. By default, and without the use of the custom build logic provided in this distribution, the build will fail, because Visual Studio is using the same physical assembly file for all targeted frameworks.
 
 #### The Solution:
-The custom build logic in the included `Directory.Build.*` files *transparently* solves that problem. When that custom build logic is used in a multi-target project, You can use Visual Studio's UI to add a reference to an AutoCAD assembly to your project, in the same way you do in a single-target project, and Visual Studio will *ignore* the path specified in the `<HintPath/>` element, and will instead use the path specified in the environment variables you've set for each target framework (described below). After you've added references to AutoCAD assemblies to a multi-target project using the Visual Studio UI, you can open the .csproj file and remove the `<HintPath/>` elements that Visual Studio generated, as they will not be used in any case.
+The custom build logic in the included `Directory.Build.*` files *transparently* solves that problem. When that custom build logic is used in a multi-target project, You can use Visual Studio's UI to add a reference to an AutoCAD assembly to your project, in the same way you do in a single-target project, and Visual Studio will *ignore* the path specified in the `<HintPath/>` element, and will instead use the path specified in the [environment variables](#environment-variables) you've set for each target framework (described below). After you've added references to AutoCAD assemblies to a multi-target project using the Visual Studio UI, you can open the .csproj file and remove the `<HintPath/>` elements that Visual Studio generated, as they will not be used in any case.
 
-You can also add references to AutoCAD assemblies manually by editing the .csproj file. If you do that, you can safely *omit* `<HintPath/>` *elements* as they *will not be used*, provided that the required environment variables described below have been set, and the included `Directory.Build.props`
+You can also add references to AutoCAD assemblies manually by editing the .csproj file. If you do that, you can safely *omit* `<HintPath/>` *elements* as they *will not be used*, provided that the required [environment variables](#environment-variables) described below have been set, and the included `Directory.Build.props`
 and `Directory.Build.targets` files are being used by the project.
 
 ### Environment Variables
@@ -191,7 +189,7 @@ It is recommended that you add `Directory.Build.props` and	`Directory.Build.targ
 
 **Important:**  Before you can use the included `Directory.Build.props` and
 `Directory.Build.targets` in a project, *including this example*, *you must
-assign values to at least two of the three `AC_NET_X_REF_PATH` environment variables described above*. The values of these environment variables must point to the locations of AutoCAD reference assemblies for each targeted framework version.
+assign values to at least two of the three `AC_NET_X_REF_PATH` [environment variables](#environment-variables) described above*. The values of these environment variables must point to the locations of AutoCAD reference assemblies for each targeted framework version.
 
 ### Default AutoCAD References:
 The included `Directory.Build.targets` file also adds references to the 3 basic AutoCAD assemblies that are used in most managed extensions:
@@ -328,7 +326,7 @@ configure the new project to use multi-targeting.
 
 When converting an existing project, you should backup the existing project
 first. These steps assume that you've already defined the (`AC_NET_x_REF_PATH`)
-environment variables that are described above, to point to the AutoCAD
+[environment variables](#environment-variables) that are described above, to point to the AutoCAD
 reference assembly locations for each targeted framework.
 
 These steps outline the process of converting an existing (or new project)
@@ -378,4 +376,3 @@ When a multi-target project is built, for each targeted framework version, a dia
 1>Built target for AutoCAD 2025 / .NET v8.0 using references from C:\Program Files\Autodesk\AutoCAD 2025
 1>Built target for AutoCAD 2027 / .NET v10.0 using references from C:\Program Files\Autodesk\AutoCAD 2027
 ```
-
