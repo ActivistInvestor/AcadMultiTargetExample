@@ -350,7 +350,9 @@ You *must edit this file* and change the paths assigned to the
 `workingDirectory` property to point to the locations of the AutoCAD
 executable (e.g., acad.exe) to launch, for each launch profile. You 
 can leave the `executablePath` property as-is, since Visual Studio
-will look for `acad.exe` in the working directory and find it.
+will look for `acad.exe` in the working directory and find it. You
+should also remove profiles for framework versions that your project
+does not target.
 
 You can also add command line arguments to be passed to the executable
 as well in the `commandLineArgs` property. The commandLineArgs property
@@ -426,6 +428,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
