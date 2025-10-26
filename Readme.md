@@ -47,7 +47,7 @@ For example, in the .csproj file of a project that uses the *`Directory.Build.pr
 *`Directory.Build.targets`* files included in this project, you can target
 all AutoCAD releases from AutoCAD 2020 thru AutoCAD 2027 (spanning 3 different
 framework versions), thusly:
-```
+```xml
 <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
       <TargetFrameworks>net471;net8.0-windows;net10.0-windows</TargetFrameworks>
@@ -56,13 +56,13 @@ framework versions), thusly:
 ```
 You don't have to target all three frameworks or AutoCAD releases. For example, you can target only .NET 4.x-based releases of AutoCAD and .NET 8.0-based releases. Or, you can target only .NET 8.0- and .NET 10.0-based releases.
 For example, to target only AutoCAD 2025 or later, you would use:
-```
+```xml
 <PropertyGroup>
        <TargetFrameworks>net10.0-windows;net8.0-windows</TargetFrameworks>
 </PropertyGroup>
 ```
 Or, to target AutoCAD 2020 through AutoCAD 2026, you would use:
-```
+```xml
 <PropertyGroup>
        <TargetFrameworks>net8.0-windows;net471</TargetFrameworks>
 </PropertyGroup>
@@ -229,7 +229,7 @@ The `<RealDwgExtension>` property can be set to `true` in a .csproj file to prev
 `AcMgd.dll` from being referenced, in projects where the extension is intended to 
 be hosted by a RealDwg host application such as AutoCAD Core Console:
 
-```
+```xml
 <PropertyGroup>
     <RealDwgExtension>true</RealDwgExtension>
 </PropertyGroup>
@@ -268,7 +268,7 @@ the use of one of those preprocessor symbols with `#if/#else/#endif`, to
 define two different implementations of a method, one for .NET 4.x, and
 the other for .NET 8.0 or later.
 
-```
+```csharp
 public static partial class Check
 {
 
@@ -307,7 +307,7 @@ merely synonyms for same, but help to make the intent clearer.
 |`AUTOCAD_2027_OR_GREATER`|True when targeting AutoCAD 2027 or later|
 
 Example usage (C#):
-```
+```csharp
 #if AUTOCAD_2025_OR_GREATER
 
    // code here will be included only when
@@ -364,7 +364,7 @@ project node, and choose *Unload Project* from the context menu.
 element to `<TargetFrameworks>`, and specify the desired framework 
 versions, separated by semicolons. For example, to target AutoCAD 2020 
 through AutoCAD 2027 you would use:
-```
+```xml
 <PropertyGroup>
        <TargetFrameworks>net10.0;net8.0;net471</TargetFrameworks>
 </PropertyGroup>
@@ -400,5 +400,6 @@ When a multi-target project is built, for each targeted framework version, a dia
 1>Built target for AutoCAD 2025 / .NET v8.0 using references from C:\Program Files\Autodesk\AutoCAD 2025
 1>Built target for AutoCAD 2027 / .NET v10.0 using references from C:\Program Files\Autodesk\AutoCAD 2027
 ```
+
 
 
