@@ -139,7 +139,9 @@ contain assembly references that are specific to that target framework.
 
 Using different, framework-specific AutoCAD references is
 required when multi-targeting different AutoCAD product releases
-that use different framework versions.
+that use different framework versions, which poses a problem and
+is the most-complicated aspect of building multi-target AutoCAD
+extensions.
 
 #### The Problem
 Unfortunately, Visual Studio and its project architecture provide
@@ -422,6 +424,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
