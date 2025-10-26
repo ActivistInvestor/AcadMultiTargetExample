@@ -189,7 +189,7 @@ First, you don't have to specify separate project references for each target fra
 
 ### Environment Variables
 
-The included build logic in the `Directory.Build.*` files is designed to require the developer to specify the locations of AutoCAD assemblies for each .NET framework they wish to target. Environment variables are used to allow the `Directory.Build.*` files to be fully-portable across development environments without requiring changes.
+The included build logic in the `Directory.Build.*` files is designed to require the developer to specify the locations of AutoCAD assemblies for each .NET framework version they wish to target. Environment variables are used to allow the `Directory.Build.*` files to be fully-portable across development environments without requiring changes.
 
 At least two or more of these environment variables *must be defined* in order for the multi-target build logic in the included `Directory.Build.*` files to function. Each of these environment variables is required *only if you are targeting the corresponding framework*. For example, if don't intend to target .NET 4.x in any project, then you
 don't have to define `AC_NET_4_REF_PATH`, as it will never be used.
@@ -425,6 +425,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
