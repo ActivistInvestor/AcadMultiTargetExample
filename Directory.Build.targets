@@ -1,5 +1,5 @@
 <Project>
-	<!-- Directory.Build.targets 
+	<!-- Directory.Build.props 
 	
 	See Readme.md for prerequisites.
 	
@@ -104,4 +104,3 @@
 	</Target>
 
 </Project>
-

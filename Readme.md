@@ -6,7 +6,7 @@ Distributed under the terms of the MIT License
 
 ### Notice:
 
-This file contains Autodesk-confidential information relating to AutoCAD 2027
+This file and the materials it is included with contain Autodesk-confidential information relating to AutoCAD 2027
 that is restricted by NDA. It is not intended for public distribution
 or disclosure to anyone that is not bound by the terms of the NDA for
 AutoCAD 2027 prior to FCS.
@@ -16,9 +16,7 @@ AutoCAD 2027 prior to FCS.
 A *minimal* example project that uses [Multi-targeting](https://learn.microsoft.com/en-us/visualstudio/msbuild/net-sdk-multitargeting) to target 3 different
 versions of the .NET framework (.NET Framework 4.71, .NET 8.0, and .NET 10.0),
 and 8 AutoCAD product releases that use those frameworks (AutoCAD 2020
-through AutoCAD 2027). In order to do that without a great deal of conditional
-compilation, the code must compile against the oldest targeted framework
-version (in this case, .NET Framework 4.71). 
+through AutoCAD 2027)
 ## *Prerequisites:*
 
 See the topic below describing ***required environment variables***
@@ -68,31 +66,31 @@ Or, to target AutoCAD 2020 through AutoCAD 2026, you would use:
 </PropertyGroup>
 ```
 
-In the `<TargetFrameworks>` element, The first item in 
-the list of target framework monikers (TFMs) determines 
-the *project context*, or which framework Visual Studio 
+In the `<TargetFrameworks>` element, The first item in
+the list of target framework monikers (TFMs) determines
+the *project context*, or which framework Visual Studio
 uses for the display of item states in Solution Explorer.
-	
-You can easily change the *project context* framework by 
+
+You can easily change the *project context* framework by
 editing the `<TargetFrameworks>` element and rearranging
-the order of the TFMs, so that the first item is the TFM 
-of the framework used for the project context, however 
-you should first ensure that the project buiilds without 
+the order of the TFMs, so that the first item is the TFM
+of the framework used for the project context, however
+you should first ensure that the project buiilds without
 error, and there are no unsaved changes in open files.
-	
-It is recommended that you first unload the project, 
-then open, edit, and save its .csproj file, and then 
-reload the project. 
+
+It is recommended that you first unload the project,
+then open, edit, and save its .csproj file, and then
+reload the project.
 
 ### Creating a Project that uses Multi-targeting
 Visual Studio 2022 provides no way to create a multi-target project via the
-'create a new project' UI. To create a new project that uses multi-targeting, 
-You first create a standard classlibrary project that targets a single framework 
+'create a new project' UI. To create a new project that uses multi-targeting,
+You first create a standard classlibrary project that targets a single framework
 version, and then manually edit the .csproj file and change the `<TargetFramework>`
-element to `<TargetFrameworks>` and specify the desired framework versions, and 
-also add the `Directory.Build.props` and `Directory.Build.targets` files to the 
+element to `<TargetFrameworks>` and specify the desired framework versions, and
+also add the `Directory.Build.props` and `Directory.Build.targets` files to the
 project. It is *strongly recommended* that you first *Unload* the project before
-editing its .csproj file, and then after saving changes, reload the project. 
+editing its .csproj file, and then after saving changes, reload the project.
 
 Within the `<TargetFrameworks>` element, each target framework's *Target
 Framework Moniker* (TFM) must be specified, delimited by semicolons. You
@@ -111,57 +109,42 @@ being targeted:
 ### Assembly References:
 
 When multi-targeting is used, different references can be specified for
-each targeted framework version. In the included example project, under 
+each targeted framework version. In the included example project, under
 the Dependencies node in Solution Explorer, you will see child nodes whose names
 are the TFM of each targeted framework, and each of those child nodes will
 contain assembly references that are specific to that target framework.
 
 <center><img src="assets/references.png" width="auto" height="460"></center><br>
 
-Specifying different AutoCAD references is required when
-multi-targeting different AutoCAD product releases that use
-different framework versions, as the AutoCAD assemblies that
-are referenced must align with the the target framework.
+Using different, framework-specific AutoCAD references is
+required when multi-targeting different AutoCAD product releases
+that use different framework versions.
 
-Note that when multi-targeting is used with the included 
-Directory.Build.props and `Directory.Build.targets` files, 
-you do not have to manually add the same AutoCAD assembly 
-reference to each target framework's References. You simply 
-add the reference *once* as you would do with a single-target 
-project. 
+#### The Problem:
+Unfortunately, Visual Studio and its project architecture provide
+no simple way to reference multiple, framework-specific versions
+of the same assembly in a multi-target project. That can't be done via
+the UI, and requires custom build logic like that provided by the `Directory.Build.props` and `Directory.Build.targets` files included
+in this distribution.
 
-The build logic in the included `Directory.Build.props` and
-`Directory.Build.targets`files take it from there, and
-tell Visual Studio where to find the correct version 
-of the assembly for each targeted framework, and ignore any
-`<HintPath/>` child element specified in the `<Reference/>`
-element.
-	
-When you add references to AutoCAD assemblies 
-manually by editing the .csproj file, you can omit 
-`<HintPath/>` elements as they will not be used, 
-provided that the required environment variables 
-are set, and the included `Directory.Build.props`
-and `Directory.Build.targets` files are being used 
-by the project.
-	
-Conversely, you can use the Visual Studio UI to
-add references, and select a reference assembly
-for any targeted AutoCAD release/Framework version,
-as the generated`<HintPath/>`will be ignored in
-any case, so You can leave it, or remove it if 
-desired.
+When multi-targeting is used with the included `Directory.Build.props` and `Directory.Build.targets` files, you do not have to manually add the same AutoCAD assembly reference to each target framework's References. In fact, *you can't do that* using the Visual Studio UI - when you right-click on the `Dependencies` node (or any framework-specific child node) in a multi-target project and choose *Add Project Reference*, You must select an assembly having a specific path, and Visual Studio adds the assembly reference with a `<HintPath/>` element that specifies that path. By default, and without the use of the custom build logic provided in this distribution, the build will fail, because Visual Studio is using the same physical assembly file for all targeted frameworks.
+
+#### The Solution:
+The custom build logic in the included `Directory.Build.*` files *transparently* solves that problem. When that custom build logic is used in a multi-target project, You can use Visual Studio's UI to add a reference to an AutoCAD assembly to your project, in the same way you do in a single-target project, and Visual Studio will *ignore* the path specified in the `<HintPath/>` element, and will instead use the path specified in the environment variables you've set for each target framework (described below). After you've added references to AutoCAD assemblies to a multi-target project using the Visual Studio UI, you can open the .csproj file and remove the `<HintPath/>` elements that Visual Studio generated, as they will not be used in any case.
+
+You can also add references to AutoCAD assemblies manually by editing the .csproj file. If you do that, you can safely *omit* `<HintPath/>` *elements* as they *will not be used*, provided that the required environment variables described below have been set, and the included `Directory.Build.props`
+and `Directory.Build.targets` files are being used by the project.
 
 ### Environment Variables
 
-At least two or more of the following environment 
-variables *must be defined* in order for the multi-target 
-build logic in the included `Directory.Build.props` and 
-`Directory.Build.targets` files to work correctly. 
-Each of these environment variables are only required if 
-you are targeting the corresponding framework. For example, 
-if don't intend to target .NET 4.x in any project, then you 
-don't have to define `AC_NET_4_REF_PATH`, as it will never 
+At least two or more of the following environment
+variables *must be defined* in order for the multi-target
+build logic in the included `Directory.Build.props` and
+`Directory.Build.targets` files to work correctly.
+Each of these environment variables are only required if
+you are targeting the corresponding framework. For example,
+if don't intend to target .NET 4.x in any project, then you
+don't have to define `AC_NET_4_REF_PATH`, as it will never
 be used.
 
 You can use the `setx` command to define these environment variables,
@@ -173,8 +156,8 @@ or the Environment Variables dialog in Windows.
 |`AC_NET_8_REF_PATH`|Path to reference assemblies for AutoCAD 2025-2026|
 |`AC_NET_10_REF_PATH`|Path to reference assemblies for AutoCAD 2027|
 
-Note: The above environment variable values should not end with a 
-trailing slash (\\).
+Note: The above environment variable values *should not end with a
+trailing slash (\\)*.
 
 ### Multi-targeting Example
 
@@ -188,32 +171,29 @@ The included example project (AcadMultiTargetExample) targets the following fram
 
 ### Language Version:
 
-If you target .NET 4.x, you must set `<LangVersion>` to at least 8.0 to support compilation of Nullable
-Reference Types and implicit usings. Or, you can disable both of those features (as is done in this example
-project) if you are primarily compiling migrated legacy code that doesn't use those features.
+If you target .NET 4.x, you can set `<LangVersion>` to at least 8.0 to support compilation of Nullable Reference Types and implicit usings. Or, you can disable both of those features (as is done in this example
+project) if you are primarily compiling migrated legacy code that doesn't use those features. If you don't set `<LangVersion>` in a multi-target project, Visual Studio uses the language version officially-supported for each target framework. If you target .NET 4.x and your code uses Nullable Reference Types, Implicit Usings, or other features not supported by the language version for .NET 4.x, you will get compiler errors for the .NET 4.x build.
 
 While you can set `<LangVersion>` to a value that's greater than the officially-supported value for .NET 4.x, you cannot use framework-dependent features (such as `Span<T>`, ranges, etc.) that were introduced in more-recent framework and C# versions, because the language features have a dependence on a more recent framework version. In some cases, packages can be added to projects targeting legacy
 framework versions that add various features introduced in later framework versions to them. Examples
-include the [System.Memory NuGet package](https://www.nuget.org/packages/system.memory/), which enables the use of Span<T> in older framework versions.
+include the [System.Memory NuGet package](https://www.nuget.org/packages/system.memory/), which enables the use of Span<T> in older framework versions, including .NET 4.x.
 
-### `Directory.Build.props` & `Directory.Build.targets`:
+### Custom Build Logic (Directory.Build.* files):
 
-The included `Directory.Build.props` and `Directory.Build.targets` files implement the multi-target build 
-logic that is used by all projects in a solution, and all projects that use those files. These two files 
-also serve to *vastly simplify* building AutoCAD extensions that use multi-targeting to target
-multiple AutoCAD/NET framework versions.
+The included `Directory.Build.props` and `Directory.Build.targets` files implement the multi-target build logic that is used by all projects in a solution, and all projects that use those files. These  files serve to *vastly simplify* building AutoCAD extensions that use multi-targeting to target multiple AutoCAD/NET framework versions.
 
 `Directory.Build.props` and	`Directory.Build.targets` are designed to be
-*fully-reusable* and are not coupled to a specific project or solution. You 
-can copy and use them in other multi-target AutoCAD projects as needed, with 
+*fully-reusable* and are not coupled to a specific project or solution. You
+can copy and use them in other multi-target AutoCAD projects as needed, with
 no changes required.
 
-**Important:**  Before you can use the included `Directory.Build.props` and
-`Directory.Build.targets` in a project, *including this example*, **you must 
-assign values to at least two of the three environment variables shown above**. 
-The values of these environment variables must point to the locations of AutoCAD 
-reference assemblies for each targeted framework version.
+It is recommended that you add `Directory.Build.props` and	`Directory.Build.targets` to your Solution's folder, above any project folders, Also adding them as Solution Items is optional but not required. If add these files to your solution's folder, you don't have to add them to individual projects in the solution that are contained within the solution's folder, as they are automatically used by all projects in a solution's folder.
 
+**Important:**  Before you can use the included `Directory.Build.props` and
+`Directory.Build.targets` in a project, *including this example*, *you must
+assign values to at least two of the three `AC_NET_X_REF_PATH` environment variables described above*. The values of these environment variables must point to the locations of AutoCAD reference assemblies for each targeted framework version.
+
+### Default AutoCAD References:
 The included `Directory.Build.targets` file also adds references to the 3 basic AutoCAD assemblies that are used in most managed extensions:
 
 ```
@@ -223,11 +203,9 @@ AcDbMgd.dll
 ```
 Hence, you do not (and should not) add references to those assemblies to any project that uses the included `Directory.Build.targets` file.
 
-### Building RealDwg Extensions
+##### Building RealDwg Extensions:
 
-The `<RealDwgExtension>` property can be set to `true` in a .csproj file to prevent 
-`AcMgd.dll` from being referenced, in projects where the extension is intended to 
-be hosted by a RealDwg host application such as AutoCAD Core Console:
+The custom build logic in the included `Directory.Build.*` files recognize the `<RealDwgExtension>` property, which can be set to `true` in a .csproj file to prevent `AcMgd.dll` from being referenced, which is required in projects where the extension is to be loaded into a *RealDwg host application* such as AutoCAD Core Console:
 
 ```xml
 <PropertyGroup>
@@ -266,7 +244,7 @@ that allow you to conditionally include/exclude code depending on the
 targeted framework version/AutoCAD release. The following example shows
 the use of one of those preprocessor symbols with `#if/#else/#endif`, to
 define two different implementations of a method, one for .NET 4.x, and
-the other for .NET 8.0 or later.
+the other for .NET 8.0 or later. Note that this example can be expressed more succinctly, but is not done that way in this case, mainly for illustration purposes.
 
 ```csharp
 public static partial class Check
@@ -296,8 +274,8 @@ public static partial class Check
 
 The `Directory.Build.props` file included in this project define several
 constants that are useful for conditional code compilation. The compiler
-constants shown below can be used just like the standard compiler-defined 
-preprocessor symbols (e.g., `NET_8_OR_GREATER`), and in fact, they are 
+constants shown below can be used just like the standard compiler-defined
+preprocessor symbols (e.g., `NET_8_OR_GREATER`), and in fact, they are
 merely synonyms for same, but help to make the intent clearer.
 
 |Symbol|Condition|
@@ -318,14 +296,14 @@ Example usage (C#):
 
 ### ``launchSettings.json``:
 
-This example project includes a `launchSettings.json` file (in the 
-Properties folder) that configures the project for debugging in Visual 
-Studio. The launchSettings.json file defines 3 debugging profiles, one 
+This example project includes a `launchSettings.json` file (in the
+Properties folder) that configures the project for debugging in Visual
+Studio. The launchSettings.json file defines 3 debugging profiles, one
 for each targeted framework/AutoCAD release.
 
 You *must edit this file* and change the paths assigned to the
-`executablePath`, and `workingDirectory` properties to point to 
-the locations of the AutoCAD executable (e.g., acad.exe) to launch, 
+`executablePath`, and `workingDirectory` properties to point to
+the locations of the AutoCAD executable (e.g., acad.exe) to launch,
 for each launch profile.
 
 You can also add command line arguments to be passed to the executable
@@ -339,30 +317,30 @@ profile to use from the dropdown list on the Visual Studio toolbar:
 
 ### Converting Existing Projects to use Multi-targeting
 
-While it's possible to convert an existing project to use multi-targeting, 
+While it's possible to convert an existing project to use multi-targeting,
 it may ultimately be better to start from scratch with a new project and copy the code files from the existing project to the new one, to ensure that the project is correctly-configured for multi-targeting.
 
 If you prefer to convert an existing project, follow the steps below.
 These steps should also be followed to create a new project that uses
 multi-targeting, after first creating a new classlibrary project
-that targets a single framework, and then following these same steps to 
+that targets a single framework, and then following these same steps to
 configure the new project to use multi-targeting.
 
-When converting an existing project, you should backup the existing project 
-first. These steps assume that you've already defined the (`AC_NET_x_REF_PATH`) 
-environment variables that are described above, to point to the AutoCAD 
+When converting an existing project, you should backup the existing project
+first. These steps assume that you've already defined the (`AC_NET_x_REF_PATH`)
+environment variables that are described above, to point to the AutoCAD
 reference assembly locations for each targeted framework.
 
 These steps outline the process of converting an existing (or new project)
-that targets a single framework version to one that targets multiple 
+that targets a single framework version to one that targets multiple
 framework versions:
 
 1. If the project is open in Visual Studio, right-click on the
 project node, and choose *Unload Project* from the context menu.
 
-2. Open the project's .csproj file and change the `<TargetFramework>` 
-element to `<TargetFrameworks>`, and specify the desired framework 
-versions, separated by semicolons. For example, to target AutoCAD 2020 
+2. Open the project's .csproj file and change the `<TargetFramework>`
+element to `<TargetFrameworks>`, and specify the desired framework
+versions, separated by semicolons. For example, to target AutoCAD 2020
 through AutoCAD 2027 you would use:
 ```xml
 <PropertyGroup>
@@ -370,17 +348,17 @@ through AutoCAD 2027 you would use:
 </PropertyGroup>
 ```
 
-3. Add copies of the `Directory.Build.props` and `Directory.Build.targets` 
+3. Add copies of the `Directory.Build.props` and `Directory.Build.targets`
 files from this project to the project you are converting to multi-targeting.
 
 4. Add a copy of the `launchSettings.json` file from this sample project to
 the Properties folder of the project being converted, and edit it to have
-the correct path(s) to the AutoCAD executable(s) and working directories 
-for each targeted framework/AutoCAD release. Note that this step is *optional* 
+the correct path(s) to the AutoCAD executable(s) and working directories
+for each targeted framework/AutoCAD release. Note that this step is *optional*
 and not required for multi-targeting to work.
 
 5. Remove any references to `acmgd.dll`, `acdbmgd.dll`, and `accoremgd.dll`
-from the .csproj file for the project being converted, as these three references 
+from the .csproj file for the project being converted, as these three references
 are included by the `Directory.Build.targets` file.
 
 6. If an existing project includes references to AutoCAD assemblies other
@@ -389,7 +367,7 @@ child elements from those `<Reference>` elements, as they will not be used.
 Note that this step is *optional*.
 
 6. Finally, save all open files, and right-click on the project in Solution
-Explorer and choose *Reload Project*, and then build the solution. 
+Explorer and choose *Reload Project*, and then build the solution.
 
 ### Diagnostic Console Output
 
@@ -400,6 +378,3 @@ When a multi-target project is built, for each targeted framework version, a dia
 1>Built target for AutoCAD 2025 / .NET v8.0 using references from C:\Program Files\Autodesk\AutoCAD 2025
 1>Built target for AutoCAD 2027 / .NET v10.0 using references from C:\Program Files\Autodesk\AutoCAD 2027
 ```
-
-
-
