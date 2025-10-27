@@ -496,9 +496,9 @@ element to `<TargetFrameworks>`, and specify the desired framework
 versions, separated by semicolons. For example, to target AutoCAD 2020
 through AutoCAD 2027 you would use:
 ```xml
-<PropertyGroup>
+   <PropertyGroup>
        <TargetFrameworks>net10.0;net8.0;net471</TargetFrameworks>
-</PropertyGroup>
+   </PropertyGroup>
 ```
 
 3. Add copies of the `Directory.Build.props` and `Directory.Build.targets`
@@ -533,3 +533,4 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
