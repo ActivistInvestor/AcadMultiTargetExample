@@ -13,7 +13,7 @@ Distributed under the terms of the MIT License
     + [Nuget Package References](#nuget-package-references)
     + [Project References](#project-references)
   * [Environment Variables](#environment-variables)
-  * [Custom Build Logic (Directory.Build.* files)](#custom-build-logic--directorybuild--files-)
+  * [Custom Build Logic](#custom-build-logic)
   * [Default AutoCAD References](#default-autocad-references)
     + [Building RealDwg Extensions](#building-realdwg-extensions)
   * [C# Language Issues](#c--language-issues)
@@ -274,7 +274,7 @@ Project references in multi-target projects work the same way they do in single-
 
 First, you don't have to specify separate project references for each target framework, but any project references must be to projects that *multi-target at least the same frameworks that are targeted by the referencing project*. In other words, if your project targets .NET 4.x, .NET 8.0, and .NET 10.0, any project references must be to projects that also multi-target those same framework versions.
 
-### Custom Build Logic (Directory.Build.* files)
+### Custom Build Logic
 
 The included `Directory.Build.props` and `Directory.Build.targets` files implement the 
 multi-target build logic that is used by all projects in a solution, and all projects 
@@ -502,6 +502,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
