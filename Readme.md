@@ -276,14 +276,21 @@ First, you don't have to specify separate project references for each target fra
 
 ### Custom Build Logic (Directory.Build.* files)
 
-The included `Directory.Build.props` and `Directory.Build.targets` files implement the multi-target build logic that is used by all projects in a solution, and all projects that use those files. These  files serve to *vastly simplify* building AutoCAD extensions that use multi-targeting to target multiple AutoCAD/NET framework versions.
+The included `Directory.Build.props` and `Directory.Build.targets` files implement the 
+multi-target build logic that is used by all projects in a solution, and all projects 
+that use those files. These files serve to *vastly simplify* building AutoCAD extensions 
+that use multi-targeting to target multiple AutoCAD/NET framework versions.
 
-`Directory.Build.props` and	`Directory.Build.targets` are designed to be
-*fully-reusable* and are not coupled to a specific project or solution. You
-can copy and use them in other multi-target AutoCAD projects as needed, with
-no changes required.
+`Directory.Build.props` and	`Directory.Build.targets` are designed to be *fully-reusable* 
+and are not coupled to a specific project or solution. You can copy and use them in other 
+multi-target AutoCAD projects as needed, with no changes required.
 
-It is recommended that you add `Directory.Build.props` and	`Directory.Build.targets` to your Solution folder, above any project folders. Also adding them as Solution Items is optional but not required. If you add these files to your solution's folder, you don't have to add them to individual projects in the solution that are contained within the solution's folder, as they are automatically used by all projects within the folder where the files are located.
+It is recommended that you add `Directory.Build.props` and	`Directory.Build.targets` to your 
+Solution folder, above any project folders, so that they will be used by all projects in the
+solution. You can also add them as Solution Items, but that's optional and not required. If 
+you add these files to your solution's folder, you don't have to add them to individual projects 
+in the solution that are contained within the solution's folder, as they are automatically 
+used by all projects within the folder where the files are located.
 
 Before you can use the included `Directory.Build.props` and
 `Directory.Build.targets` in a project, you must
@@ -495,6 +502,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
