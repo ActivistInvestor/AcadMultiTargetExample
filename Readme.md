@@ -321,7 +321,7 @@ project) if you are primarily compiling migrated legacy code that doesn't use th
 
 While you can set `<LangVersion>` to a value that's greater than the officially-supported value for .NET 4.x, you cannot use framework-dependent features (such as `Span<T>`, ranges, etc.) that were introduced in more-recent framework and C# versions, because the language features have a dependence on a more recent framework version. In some cases, packages can be added to projects targeting legacy
 framework versions that add various features introduced in later framework versions to them. Examples
-include the [System.Memory NuGet package](https://www.nuget.org/packages/system.memory/), which enables the use of Span<T> in older framework versions, including .NET 4.x.
+include the [System.Memory NuGet package](https://www.nuget.org/packages/system.memory/), which enables the use of `Span<T>` in older framework versions, including .NET 4.x.
 
 #### Source Code Compatibility
 
@@ -502,6 +502,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
