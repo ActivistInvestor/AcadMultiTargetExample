@@ -174,7 +174,7 @@ frameworks are selected, the properties palette displays the *effective path* to
 the reference, confirming that it is the correct reference path for the target
 framework.
 
-<center><img src="assets/devenv.gif" width="auto" height="680"></center><br>
+<center><img src="assets/references.gif" width="600" height="auto"></center><br>
 
 Using different, framework-specific AutoCAD references is
 required when multi-targeting different AutoCAD product releases
@@ -227,8 +227,8 @@ to add one or more paths to the list of paths that it  searches before it uses t
 specified in the `<HintPath/>` element. This solution simply adds the location of the
 AutoCAD reference assemblies for the target framework currently being built to that list
 of paths that Visual Studio searches before falling-back to the `<HintPath>` element, and
-the correct version of the assembly (corresponding to the target framework that's being 
-built) is found. Note that this *path-injection* process happens for each target framework 
+the correct version of the assembly (corresponding to the target framework that's being
+built) is found. Note that this *path-injection* process happens for each target framework
 in a multi-target project, which means that each target framework uses AutoCAD assemblies
 from a different location, that correspond to that framework.
 
@@ -432,7 +432,7 @@ target framework is changed from the target framework selector dropdown.
 Notice that as the current target framework is changed, the display of each
 of the two versions of the method are toggled between included and excluded.
 
-<center><img src="assets/editorcontext.gif" width="auto" height="400"></center><br>
+<center><img src="assets/editorcontext.gif" width="500" height="auto"></center><br>
 
 ## Multi-targeting Example Project
 
@@ -537,7 +537,7 @@ Explorer and choose *Reload Project*, and then build the solution.
 
 After completing the above steps, if Visual Studio displays error messages,
 it is most-likely a result of it not being able to fully-reconcile changes
-made to the project. In that case, you should save all open files, *close 
+made to the project. In that case, you should save all open files, *close
 and restart Visual Studio*, and reload the solution containing the project.
 
 ## Diagnostic Console Output
@@ -551,9 +551,3 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
-
-
-
-
-
-
