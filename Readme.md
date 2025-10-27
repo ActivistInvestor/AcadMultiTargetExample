@@ -74,7 +74,7 @@ framework versions), thusly:
    </PropertyGroup>
 </Project>
 ```
-You don't have to target all three frameworks or AutoCAD releases. For example, you can target only .NET 4.x-based releases of AutoCAD and .NET 8.0-based releases. Or, you can target only .NET 8.0- and .NET 10.0-based releases. For example, to target only AutoCAD 2025 or later, you would use:
+You don't have to target all three frameworks or AutoCAD releases. For example, you can target only .NET 4.x- and .NET 8.0-based releases of AutoCAD. Or, you can target only .NET 8.0- and .NET 10.0-based releases. For example, to target only AutoCAD 2025 or later, you would use:
 ```xml
 <PropertyGroup>
        <TargetFrameworks>net10.0-windows;net8.0-windows</TargetFrameworks>
@@ -431,6 +431,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
