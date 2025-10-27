@@ -128,6 +128,25 @@ being targeted:
 |`net8.0` or `net8.0-windows`|.NET 8.0|AutoCAD 2025 & 2026|
 |`net10.0` or `net10.0-windows`|.NET 10.0|AutoCAD 2027 or later|
 
+### Environment Variables
+
+The included build logic in the `Directory.Build.*` files is designed to require the developer to specify the locations of AutoCAD assemblies for each .NET framework version they wish to target. Environment variables are used to allow the `Directory.Build.*` files to be *fully-portable* across development environments without requiring changes.
+
+At least two of these environment variables *must be defined* in order for the multi-target build logic to work as-designed. Each of these environment variables is required *only if you are targeting the corresponding framework*. For example, if you don't intend to target .NET 4.x in any project, then you
+don't have to define the `AC_NET_4_REF_PATH` environment variable, as it will never be used.
+
+You can use the `setx` command to define these environment variables,
+or the Environment Variables dialog in Windows.
+
+|Environment Variable|Description|
+|-----------------|-------------|
+|`AC_NET_4_REF_PATH`|Path to reference assemblies for AutoCAD 2020-2024|
+|`AC_NET_8_REF_PATH`|Path to reference assemblies for AutoCAD 2025-2026|
+|`AC_NET_10_REF_PATH`|Path to reference assemblies for AutoCAD 2027|
+
+Note: The above environment variable values ***must not*** *include a trailing slash (\\)*.
+
+Requiring paths to AutoCAD reference assemblies for each target framework to be specified using environment variables allows the `Directory.Build.*` files to be *fully-portable* across machines where the locations of the reference assemblies may differ, thereby supporting widespread distribution and team development scenarios.
 
 ### Assembly References
 
@@ -195,26 +214,6 @@ For other third-party nuget packages that support package versioning and multipl
 Project references in multi-target projects work the same way they do in single-target projects with several special requirements.
 
 First, you don't have to specify separate project references for each target framework, but any project references must be to projects that *multi-target at least the same frameworks that are targeted by the referencing project*. In other words, if your project targets .NET 4.x, .NET 8.0, and .NET 10.0, any project references must be to projects that also multi-target those same framework versions.
-
-### Environment Variables
-
-The included build logic in the `Directory.Build.*` files is designed to require the developer to specify the locations of AutoCAD assemblies for each .NET framework version they wish to target. Environment variables are used to allow the `Directory.Build.*` files to be fully-portable across development environments without requiring changes.
-
-At least two of these environment variables *must be defined* in order for the multi-target build logic to work as-designed. Each of these environment variables is required *only if you are targeting the corresponding framework*. For example, if don't intend to target .NET 4.x in any project, then you
-don't have to define `AC_NET_4_REF_PATH`, as it will never be used.
-
-You can use the `setx` command to define these environment variables,
-or the Environment Variables dialog in Windows.
-
-|Environment Variable|Description|
-|-----------------|-------------|
-|`AC_NET_4_REF_PATH`|Path to reference assemblies for AutoCAD 2020-2024|
-|`AC_NET_8_REF_PATH`|Path to reference assemblies for AutoCAD 2025-2026|
-|`AC_NET_10_REF_PATH`|Path to reference assemblies for AutoCAD 2027|
-
-Note: The above environment variable values ***must not*** *include a trailing slash (\\)*.
-
-Requiring paths to AutoCAD reference assemblies for each target framework to be specified using environment variables allows the `Directory.Build.*` files to be *fully-portable* across machines where the locations of the reference assemblies may differ, thereby supporting widespread distribution and team development scenarios.
 
 ### Custom Build Logic (Directory.Build.* files)
 
