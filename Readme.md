@@ -232,7 +232,7 @@ The included `Directory.Build.targets` file also adds references to the 3 basic 
 * `AcCoreMgd.dll`
 * `AcDbMgd.dll`
 
-Hence, you do not (and should not) add references to those assemblies to any project that uses the included `Directory.Build.targets` file.
+Hence, you do not (and should not) add references to those assemblies to any project that uses the included `Directory.Build.targets` file. You can add additional AutoCAD references to Directory.Build.targets that will be used by all projects that use that file, that eliminates the need to add those same references to each project.
 
 #### Building RealDwg Extensions
 
@@ -431,6 +431,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
