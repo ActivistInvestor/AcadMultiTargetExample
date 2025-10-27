@@ -225,12 +225,12 @@ algorithm, which is that it searches for an assembly in other locations *before*
 searches the path specified in the `<HintPath/>` element. Visual Studio provides a way
 to add one or more paths to the list of paths that it  searches before it uses the path
 specified in the `<HintPath/>` element. This solution simply adds the location of the
-AutoCAD reference assemblies for the target framework current being built to that list
-of paths that Visual Studio searches before falling-back to the path specified in the
-`<HintPath>` element, and the correct version of the assembly (corresponding to the target
-framework that's being built) is found. Note that this *path-injection* process happens
-for each target framework in a multi-target project, which means that each target framework
-uses AutoCAD assemblies from a different location, that correspond to that framework.
+AutoCAD reference assemblies for the target framework currently being built to that list
+of paths that Visual Studio searches before falling-back to the `<HintPath>` element, and
+the correct version of the assembly (corresponding to the target framework that's being 
+built) is found. Note that this *path-injection* process happens for each target framework 
+in a multi-target project, which means that each target framework uses AutoCAD assemblies
+from a different location, that correspond to that framework.
 
 You can also add references to AutoCAD assemblies manually by editing the .csproj file.
 If you do that, you can safely *omit* `<HintPath/>` *elements* as they *will not be used*,
@@ -533,4 +533,5 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
