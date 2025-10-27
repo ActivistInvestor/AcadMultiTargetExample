@@ -19,7 +19,7 @@ Distributed under the terms of the MIT License
   * [C# Language Issues](#c-language-issues)
     + [Source Code Compatibility](#source-code-compatibility)
     + [Conditional Compilation](#conditional-compilation)
-    + [Constants Defined by `Directory.Build.props`](#constants-defined-by--directorybuildprops-)
+    + [Compiler Constants](#compiler-constants)
 - [Multi-targeting Example Project](#multi-targeting-example-project)
 - [Debug Profiles](#debug-profiles)
 - [Converting Existing Projects to use Multi-targeting](#converting-existing-projects-to-use-multi-targeting)
@@ -380,7 +380,7 @@ public static partial class Check
 
 }
 ```
-#### Constants Defined by `Directory.Build.props`
+#### Compiler Constants
 
 The `Directory.Build.props` file included in this project define several
 constants that are useful for conditional code compilation. The compiler
@@ -502,6 +502,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
