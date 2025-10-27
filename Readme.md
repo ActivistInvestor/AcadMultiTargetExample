@@ -139,7 +139,7 @@ contain assembly references that are specific to that target framework.
 
 <center><img src="assets/references.png" width="auto" height="460"></center><br>
 
-The following clip shows the example project open in Solution Explorer, with the Properties palette below it. Notice that as each reference is selected, the properties palette displays the *effective path* to the reference, confirming that it is the correct reference for the target framework.
+The following clip shows the example project open in Solution Explorer, with the Properties palette below it. Notice that as references from different target frameworks are selected, the properties palette displays the *effective path* to the reference, confirming that it is the correct reference path for the target framework.
 
 <center><img src="assets/devenv.gif" width="auto" height="680"></center><br>
 
