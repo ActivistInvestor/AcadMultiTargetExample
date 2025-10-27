@@ -54,8 +54,8 @@ Without defining these environment variables, *nothing will work*.
 [Multi-targeting](https://learn.microsoft.com/en-us/visualstudio/msbuild/net-sdk-multitargeting)
 provides a means for a single .NET SDK-style project to target multiple
 .NET framework versions. When you build a multi-target project, the
-project is built *multiple times*, once for each targeted framework version, 
-with the build output for each placed in a different sub-folder below 
+project is built *multiple times*, once for each targeted framework version,
+with the build output for each placed in a different sub-folder below
 the \Release and \Debug folders.
 
 <center><img src="assets/buildoutput.png" width="auto" height="390"></center><br>
@@ -139,6 +139,10 @@ contain assembly references that are specific to that target framework.
 
 <center><img src="assets/references.png" width="auto" height="460"></center><br>
 
+The following clip shows the example project open in Solution Explorer, with the Properties palette below it. Notice that as each reference is selected, the properties palette displays the *effective path* to the reference, confirming that it is the correct reference for the target framework.
+
+<center><img src="assets/devenv.gif" width="auto" height="680"></center><br>
+
 Using different, framework-specific AutoCAD references is
 required when multi-targeting different AutoCAD product releases
 that use different framework versions, which poses a problem and
@@ -147,18 +151,18 @@ extensions.
 
 #### The Problem
 Unfortunately, Visual Studio and its project architecture provide
-no way to reference multiple, framework-specific versions of the same 
-assembly in a multi-target project. That can't be done via the UI, 
-and further, a Visual Studio project has no formal representation of 
+no way to reference multiple, framework-specific versions of the same
+assembly in a multi-target project. That can't be done via the UI,
+and further, a Visual Studio project has no formal representation of
 multiple, framework-specific assemblies.
 Hence, getting Visual Studio to use multiple versions of framework-specific
-assemblies requires custom build logic like that provided by the `Directory.Build.props` 
+assemblies requires custom build logic like that provided by the `Directory.Build.props`
 and `Directory.Build.targets` files included in this distribution.
 
 When multi-targeting is used with the included `Directory.Build.props` and `Directory.Build.targets` files, you do not have to manually add different versions of the same AutoCAD assembly reference to each target framework's references. In fact, *you can't do that* using the Visual Studio UI - when you right-click on the `Dependencies` node (or any framework-specific child node) in a multi-target project and choose *Add Project Reference*, You must select an assembly having a specific path, and Visual Studio adds the assembly reference to the .csproj file, that includes a `<HintPath/>` element that specifies the absolute path to the selected assembly. By default, and without the use of the custom build logic provided in this distribution, a build will fail, because Visual Studio is incorrectly using the same version of the assembly for *all targeted frameworks*, when different versions of that assembly must be used with each target framework.
 
 #### The Solution
-The custom build logic in the included `Directory.Build.*` files *transparently* solves that problem. When that custom build logic is used in a multi-target project, You can use Visual Studio's UI to add a reference to an AutoCAD assembly to your project, in the same way you do in a single-target project, and Visual Studio will *ignore* the path specified in the `<HintPath/>` element, and will instead use the path specified in one of the [environment variables](#environment-variables) you've set for each target framework (described below). After you've added references to AutoCAD assemblies to a multi-target project using the Visual Studio UI, you can open the .csproj file and remove the `<HintPath/>` elements that Visual Studio generated, as they will not be used in any case. 
+The custom build logic in the included `Directory.Build.*` files *transparently* solves that problem. When that custom build logic is used in a multi-target project, You can use Visual Studio's UI to add a reference to an AutoCAD assembly to your project, in the same way you do in a single-target project, and Visual Studio will *ignore* the path specified in the `<HintPath/>` element, and will instead use the path specified in one of the [environment variables](#environment-variables) you've set for each target framework (described below). After you've added references to AutoCAD assemblies to a multi-target project using the Visual Studio UI, you can open the .csproj file and remove the `<HintPath/>` elements that Visual Studio generated, as they will not be used in any case.
 
 ##### How it works
 The solution takes advantage of a subtle aspect of Visual Studio's assembly resolution algorithm, which is that it searches for an assembly in other locations *before* it searches the path specified in the `<HintPath/>` element. MSBUILD provides a way to add one or more paths to the list of paths that Visual Studio searches before it uses the path specified in the `<HintPath/>` element. The solution simply adds the location of the AutoCAD reference assemblies for the target framework to that list of paths that Visual Studio searches before falling-back to the path specified in the `<HintPath>` element, and the correct assembly corresponding to the target framework is found. Note that this *path-injection* process happens for each target framework in a multi-target project, which means that each target framework uses AutoCAD assemblies from a different location, that correspondd to that framework.
@@ -353,7 +357,7 @@ for each targeted framework/AutoCAD release.
 
 You *must edit this file* and change the paths assigned to the
 `workingDirectory` property to point to the locations of the AutoCAD
-executable (e.g., acad.exe) to launch, for each launch profile. You 
+executable (e.g., acad.exe) to launch, for each launch profile. You
 can leave the `executablePath` property as-is, since Visual Studio
 will look for `acad.exe` in the working directory and find it. You
 should also remove profiles for framework versions that your project
@@ -361,7 +365,7 @@ does not target.
 
 You can also add command line arguments to be passed to the executable
 as well in the `commandLineArgs` property. The commandLineArgs property
-in the example project is defined to pass the `/nologo` switch to start 
+in the example project is defined to pass the `/nologo` switch to start
 AutoCAD without showing the splash screen.
 
 When you run the project in the debugger, you can select which launch
@@ -433,25 +437,3 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
