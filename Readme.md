@@ -527,12 +527,12 @@ add the following to the .csproj file to suppress referencing  of `AcMgd.dll`:
       <RealDwgExtension>true</RealDwgExtension>
    </PropertyGroup>
 ```
-7. If an existing project includes references to AutoCAD assemblies other
+6. If an existing project includes references to AutoCAD assemblies other
 than `AcMgd.dll`, `AcDbMgd.dll`, and `AcCoreMgd.dll`, remove the `<HintPath/>`
 child elements from those `<Reference>` elements, as they will not be used.
 Note that this step is *optional*.
 
-8. Finally, save all open files, and right-click on the project in Solution
+7. Finally, save all open files, and right-click on the project in Solution
 Explorer and choose *Reload Project*, and then build the solution.
 
 ## Diagnostic Console Output
@@ -546,6 +546,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
