@@ -489,7 +489,8 @@ that targets a single framework version to one that targets multiple
 framework versions:
 
 1. If the project is open in Visual Studio, right-click on the
-project node, and choose *Unload Project* from the context menu.
+project node in Solution Explorer, and choose *Unload Project*
+from the context menu.
 
 2. Open the project's .csproj file and change the `<TargetFramework>`
 element to `<TargetFrameworks>`, and specify the desired framework
@@ -503,6 +504,10 @@ through AutoCAD 2027 you would use:
 
 3. Add copies of the `Directory.Build.props` and `Directory.Build.targets`
 files from this project to the project you are converting to multi-targeting.
+You should copy these files to the solution folder that contains the project
+being converted. You don't have to explicitly add these files to the project,
+as it  will automatically use them if the project is located in the same folder
+or in any subfolder of the solution folder.
 
 4. Add a copy of the `launchSettings.json` file from this sample project to
 the Properties folder of the project being converted, and edit it to have
@@ -519,7 +524,7 @@ than `AcMgd.dll`, `AcDbMgd.dll`, and `AcCoreMgd.dll`, remove the `<HintPath/>`
 child elements from those `<Reference>` elements, as they will not be used.
 Note that this step is *optional*.
 
-6. Finally, save all open files, and right-click on the project in Solution
+7. Finally, save all open files, and right-click on the project in Solution
 Explorer and choose *Reload Project*, and then build the solution.
 
 ## Diagnostic Console Output
@@ -533,5 +538,6 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
