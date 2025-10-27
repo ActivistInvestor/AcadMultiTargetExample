@@ -16,7 +16,7 @@ Distributed under the terms of the MIT License
   * [Custom Build Logic](#custom-build-logic)
   * [Default AutoCAD References](#default-autocad-references)
     + [Building RealDwg Extensions](#building-realdwg-extensions)
-  * [C# Language Issues](#c--language-issues)
+  * [C# Language Issues](#c#-language-issues)
     + [Source Code Compatibility](#source-code-compatibility)
     + [Conditional Compilation](#conditional-compilation)
     + [Constants Defined by `Directory.Build.props`](#constants-defined-by--directorybuildprops-)
@@ -502,6 +502,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
