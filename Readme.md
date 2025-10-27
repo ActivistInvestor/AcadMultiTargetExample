@@ -535,6 +535,11 @@ Note that this step is *optional*.
 7. Finally, save all open files, and right-click on the project in Solution
 Explorer and choose *Reload Project*, and then build the solution.
 
+After completing the above steps, if Visual Studio displays error messages,
+it is most-likely a result of it not being able to fully-reconcile changes
+made to the project. In that case, you should save all open files, *close 
+and restart Visual Studio*, and reload the solution containing the project.
+
 ## Diagnostic Console Output
 
 When a multi-target project is built, for each targeted framework version, a diagnostic message is displayed on the output console indicating the target build and the path to the set of AutoCAD reference assemblies used to build that target. You can view the Output pane to see these messages and use them to verify that build targets are using the correct set of AutoCAD reference assemblies:
@@ -546,6 +551,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
