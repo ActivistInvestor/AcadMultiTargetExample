@@ -435,7 +435,7 @@ AutoCAD without showing the splash screen.
 
 When you run the project in the debugger, you can select which launch
 profile to use from the dropdown list on the Visual Studio toolbar:
-<center><img src="assets/tfs.png" width="450" height="auto"></center><br>
+<center><img src="assets/tfs.png" width="600" height="auto"></center><br>
 
 ## Converting Existing Projects to use Multi-targeting
 
@@ -502,6 +502,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 ```
 
 For issues, questions, and general discussion you can visit the [repository where this project is hosted](https://github.com/ActivistInvestor/AcadMultiTargetExample).
+
 
 
 
