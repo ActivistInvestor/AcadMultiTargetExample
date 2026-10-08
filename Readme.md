@@ -1,6 +1,6 @@
 ## AcadMultiTargetExample
 
-ActivistInvestor \ Tony T
+ActivistInvestor \ Tony Tanzillo
 
 Distributed under the terms of the MIT License
 
