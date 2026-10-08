@@ -26,6 +26,7 @@ NOTE: This documentation is in the process of being revised. More updates are pe
 - [Debug Profiles](#debug-profiles)
 - [Converting Existing Projects to use Multi-targeting](#converting-existing-projects-to-use-multi-targeting)
 - [Diagnostic Console Output](#diagnostic-console-output)
+- [Version 2.0 Functionality and Enhancements](#version-2.0-functionality-and-enhancements)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -565,7 +566,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 1>Built target for AutoCAD 2027 / .NET v10.0 using references from C:\Program Files\Autodesk\AutoCAD 2027
 ```
 
-Version 2.0 New Functionality and Enhancements
+## Version 2.0 Functionality and Enhancements
 
 Summary of New Functionality:
 	
