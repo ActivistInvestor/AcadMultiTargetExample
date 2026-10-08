@@ -586,10 +586,8 @@ file types. These files can have any name:
 		 
 | File type | Description |
 |---|---|
-| `.dwg` | A drawing file to be opened when AutoCAD starts. Its full path is passed in the dynamically-generated command-line arguments that are used to launch AutoCAD in a debug session.
-|
-| `.dwt` | A drawing template that if present, is used to create a new drawing when AutoCAD is started. This file *will not be used if a `.dwg` file is also present in the **Startup Assets** folder*. To use a `.dwt` file to create a new drawing, remove any `.dwg` file from the **Startup Assets** folder (or you can just give it a different file extension). 
-|
+| `.dwg` | A drawing file to be opened when AutoCAD starts. Its full path is passed in the dynamically-generated command-line arguments that are used to launch AutoCAD in a debug session.|
+| `.dwt` | A drawing template that if present, is used to create a new drawing when AutoCAD is started. This file *will not be used if a `.dwg` file is also present in the **Startup Assets** folder*. To use a `.dwt` file to create a new drawing, remove any `.dwg` file from the **Startup Assets** folder (or you can just give it a different file extension).|
 | `.scr` | A script file to be executed when a debug session is started, after the debug target assembly has been loaded. The script file does not have to (*and should not*) NETLOAD the assembly, as that is performed implicitly by a dynamically-generated script file passed as an AutoCAD command-line argument. If a `.scr` file is present in the **Startup Assets** folder, the dynamically-generated loader script will execute that script file immediately after NETLOADing the debug target assembly. |
 		 
 ### Implicit loading of the debug target assembly upon AutoCAD launch:
