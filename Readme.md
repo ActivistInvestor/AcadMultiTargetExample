@@ -610,27 +610,30 @@ To facilitate customization of the dynamically-generated command line, the build
 
 ### launchSettings.Json
 
-The included `launchSettings.json` file is almost entirely *property-driven*, and uses both project properties defined by the custom build logic, as well as environment variables that point to the folder containing the debug target executable (usually acad.exe). That allows `launchSetting.json` to be reusable without changes, across multiple projects that use this custom build environment. The included `launchSettings.json` file depends on the following environment variables, which must hold the location of the AutoCAD program executable for each targeted product release.
+The included `launchSettings.json` file is almost entirely *property-driven*, and uses both MSBUILD properties defined by the custom build logic, as well as environment variables that point to the folder containing the application executable to launch (usually acad.exe). That allows `launchSetting.json` to be reusable without changes, across multiple projects that use this custom build environment. The included `launchSettings.json` file depends on the following environment variables, which must hold the location of the AutoCAD program executable for each targeted product release.
 
 |Environment Variable|Description|
 |-----------------|-------------|
-|`AC_NET_4_BASE_PATH`|Path to AutoCAD Installation folder for AutoCAD 2020-2024|
-|`AC_NET_8_BASE_PATH`|Path to AutoCAD Installation folder for AutoCAD 2025-2026|
-|`AC_NET_10_BASE_PATH`|Path to AutoCAD Installation folder for AutoCAD 2027|
+|`AC_NET_4_BASE_PATH`|Path to AutoCAD Installation folder of a .NET 4.x-based  AutoCAD product (e.g., 2020-2024)|
+|`AC_NET_8_BASE_PATH`|Path to AutoCAD Installation folder of a .NET 8.0-based AutoCAD product (e.g., 2025-2026)|
+|`AC_NET_10_BASE_PATH`|Path to AutoCAD Installation folder of a .NET 10.0-based AutoCAD product (e.g., 2027 and .NET 10-based updates of 2025 and 2026).|
 
 
 ### Customizable Build Parameters
 
-The custom build system recognizes a number of MSBUILD properties that can be optionally defined in a .csproj file, to override/customize the default behavior of the build system:
+The custom build system recognizes a number of MSBUILD properties that can optionally be defined in a .csproj file, to override/customize the default behavior of the build system:
 
 | Property | Description |
 |---|---|
-| `<StartupDrawing>` | Can be used to override default probing for a startup drawing in the **Startup Assets** folder, allowing any `.dwg` file to be loaded into AutoCAD at startup, by assigning its full path to this property. |
-| `<StartupTemplate>`|<p>Can be used to override default probing for a startup drawing template in the **Startup Assets** folder, allowing any `.dwt` file to be used to create a new drawing at startup, by assigning its full path to this property.</p><p>Note: Use of this property requires that there *not be a startup drawing (dwg) file* either specified explicitly via the `<StartupDrawing>` property, or by the presence of a .dwg file in the *Startup Assets* folder.|
-| `<StartupScript>` |<p>Can be used to override default probing for a startup script file in the **Startup Assets** folder, allowing any `.scr` file to be run in AutoCAD at startup, by assigning its full path to this property.</p><p>Note: If this property is assigned to a .scr file, that script file should conform to the same conventions used by a script file in the *Startup Assets* folder. Namely, it should *not* explicitly load the target assembly into AutoCAD, which will already have happened by the time this script file is executed.</p>|
-| `<CommandLine>` | Can be used to **completely override dynamic command-line generation**, by assigning the entire command line to be used to start AutoCAD to this property. When this property is assigned, *there is no startup drawing, drawing template, or script file used, and there is no dynamically-generated loader script to load the debug target into AutoCAD*. This property cannot be used in conjunction with the `<AppendToCommandLine>` property. |
-| `<AppendToCommandLine>` | Can be used to add additional switches/arguments to the dynamically-generated command line that is used to start AutoCAD in a debug session. This property cannot be used in conjunction with the `<CommandLine>` property. The example below shows the use of the `<AppendToCommandLine>` property to add additional arguments to the implicitly-generated command line. The example specifies that a named view named `PLANVIEW` be restored when the drawing containing it is opened.|
+| `<StartupDrawing>`| Can be used to override default probing of the **Startup Assets** folder for a startup drawing, allowing any `.dwg` file to be loaded into AutoCAD at startup, by assigning its full path to this property. |
+| `<StartupTemplate>`|<p>Can be used to override default probing of the **Startup Assets** folder for a drawing template file, allowing any `.dwt` file to be used to create a new drawing at startup, by assigning its full path to this property.</p><p>Note: Use of this property requires that there *not be a startup drawing (dwg) file* either specified explicitly via the `<StartupDrawing>` property, or by the presence of a .dwg file in the *Startup Assets* folder.|
+| `<StartupScript>`|<p>Can be used to override default probing of the **Startup Assets** folder for a startup script file, allowing any `.scr` file to be run in AutoCAD at startup, by assigning its full path to this property.</p><p>Note: If this property is assigned to a .scr file, that script file should *not* NETLOAD the target assembly into AutoCAD, as that is handled by the dynamically-generated loader script, and will have already happened at the point when this script file executes.</p>|
+| `<StartupLisp>`|<p>Can be used to override default probing of the **Startup Assets** folder for a startup LISP file, allowing any `.lsp` file to be loaded at startup, by assigning its full path to this property.</p><p>A startup LISP file and a startup SCRIPT file are *not mutually exclusive*. Either or both can be used. If both a startup LISP file *and* a startup script file are specified (explicitly or implicitly via probing the *Startup Asssets* folder), the startup LISP file is loaded *before* the startup script file is executed.
+| `<AppendToCommandLine>` | Can be used to add one or more additional switches/arguments to the dynamically-generated command line that is used to start AutoCAD in a debug session.|
+`<CommandLineArgs>`|<p>Can be used to **completely override dynamic command-line generation**, by assigning the entire command line to be used to start AutoCAD to this property.</p><p>If this property is assigned, *there is no startup drawing or  drawing template; LISP or script file used; and there is no dynamically-generated loader script to NETLOAD the debug target into AutoCAD*. This property cannot be used in conjunction with any of the other properties shown in this table.|
+| 
 
+The following example illustrates the use of the `<AppendToCommandLine>` property element. The example specifies that a view named `PLANVIEW` be restored when the drawing containing it is opened:
 ```xml
    <PropertyGroup>
       <AppendToCommandLine>/v PLANVIEW</AppendToCommandLine>
