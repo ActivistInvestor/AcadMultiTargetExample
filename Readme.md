@@ -573,13 +573,15 @@ When a multi-target project is built, for each targeted framework version, a dia
 
 ## Centralized Custom Build Functionality
 
-The custom build logic in the `Directory.Build.props` and `Directory.Build.targets` files provides additional debugging functionality:
+In addition to managing multi-target projects, the custom build logic in the `Directory.Build.props` and `Directory.Build.targets` files provides custom build logic that supports test automation and common debugging tasks:
 	
-- Support for startup .dwg, .dwt, .lsp, and .scr files.
+- Support for *startup* .dwg, .dwt, .lsp, and .scr files. Any of these file types can be automatically opened or loaded into AutoCAD when it is started in a debug session.
 
-- Dynamically-generated loader script (.scr) file that implicitly NETLOADs the debug target into AutoCAD when started in a debug session, eliminating the need for an explicit script file to NETLOAD the target.
+- Dynamically-generated, target framework-specific *loader script (.scr) files* that implicitly NETLOADs the debug target into AutoCAD when started in a debug session, eliminating the need for an explicit script file to NETLOAD the target.
 
-- Dynamically-generated command line arguments/switches with the option to use additional command line arguments/switches on a per-project basis, by specifying them in a .csproj file.
+- Dynamically-generated executable command line, with the option to add additional command line arguments/switches on a per-project basis, by specifying them in a .csproj file.
+
+- Highly-configurable build environment that gives the developer complete control over its behavior using MSBUILD properties.
 		 
 ### The *Startup* folder
 		 
