@@ -81,27 +81,21 @@
 	"accoreconsole.exe" to use AutoCAD Core Console as
 	the debug target. This property is referenced from
 	launchSettings.json -->
-	
+
 	<PropertyGroup>
 		<ExecutableName>acad.exe</ExecutableName>
-	</PropertyGroup>
-	<PropertyGroup>
 		<StartupAppName>acad</StartupAppName>
+		<StartupFolder>Startup</StartupFolder>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
-	
-	<!-- Default startup dwg and scr filenames -->
-	<PropertyGroup>
-		<StartupDwg>startup.dwg</StartupDwg>
-		<StartupScr>startup.scr</StartupScr>
-	</PropertyGroup>
+
 
 	<!-- Framework / AutoCAD mapping       
 	
-	Defines $(AcReferencePath) and other framework-specific properties 
+	Defines $(AcRefPath) and other framework-specific properties 
 	based on the current TFM. See Readme.md for a complete explanation 
 	of these properties. These properties will be assigned to different
 	values depending on what target framework is currently being built.
@@ -112,41 +106,46 @@
 	-->
 
 	<Choose>
-		<When Condition="'$(TargetFramework)' != '' And $(TargetFramework.StartsWith('net4'))">
-			<PropertyGroup Condition="Exists('$(AC_NET_4_REF_PATH)')">
-				<AcReferencePath>$(AC_NET_4_REF_PATH)</AcReferencePath>
-				<AcMinVer>2020</AcMinVer>
-				<AcMaxVer>2024</AcMaxVer>
-				<FrameworkMajorVer>4</FrameworkMajorVer>
-				<_Ver>4</_Ver>
-				<DefineConstants>$(DefineConstants);AUTOCAD_2020_OR_GREATER</DefineConstants>
-				<!-- Binding Redirects apply to .NET Framework Only -->
-				<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-				<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-				<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-			</PropertyGroup>
-		</When>
-		<When Condition="'$(TargetFramework)' != '' And $(TargetFramework.StartsWith('net8'))">
-			<PropertyGroup Condition="Exists('$(AC_NET_8_REF_PATH)')">
-				<AcReferencePath>$(AC_NET_8_REF_PATH)</AcReferencePath>
-				<AcMinVer>2025</AcMinVer>
-				<AcMaxVer>2026</AcMaxVer>
-				<FrameworkMajorVer>8</FrameworkMajorVer>
-				<_Ver>8</_Ver>
-				<DefineConstants>$(DefineConstants);AUTOCAD_2020_OR_GREATER;AUTOCAD_2025_OR_GREATER</DefineConstants>
-			</PropertyGroup>
-		</When>
+		<When Condition="'$(TargetFramework)' != ''">
+			<Choose>
+				<When Condition="$(TargetFramework.StartsWith('net4'))">
+					<PropertyGroup Condition="Exists('$(AC_NET_4_REF_PATH)')">
+						<AcRefPath>$(AC_NET_4_REF_PATH.TrimEnd('\'))'</AcRefPath>
+						<AcMinVer>2020</AcMinVer>
+						<AcMaxVer>2024</AcMaxVer>
+						<FrameworkMajorVer>4</FrameworkMajorVer>
+						<_Ver>4</_Ver>
+						<DefineConstants>$(DefineConstants);AUTOCAD_2020_OR_GREATER</DefineConstants>
+						<!-- Binding Redirects apply to .NET Framework Only -->
+						<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+						<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+						<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+					</PropertyGroup>
+				</When>
+				<When Condition="$(TargetFramework.StartsWith('net8'))">
+					<PropertyGroup Condition="Exists('$(AC_NET_8_REF_PATH)')">
+						<AcRefPath>$(AC_NET_8_REF_PATH.TrimEnd('\'))</AcRefPath>
+						<AcMinVer>2025</AcMinVer>
+						<AcMaxVer>2026</AcMaxVer>
+						<FrameworkMajorVer>8</FrameworkMajorVer>
+						<_Ver>8</_Ver>
+						<DefineConstants>$(DefineConstants);AUTOCAD_2020_OR_GREATER;AUTOCAD_2025_OR_GREATER</DefineConstants>
+					</PropertyGroup>
+				</When>
 
-		<When Condition="'$(TargetFramework)' != '' And $(TargetFramework.StartsWith('net10'))">
-			<PropertyGroup Condition="Exists('$(AC_NET_10_REF_PATH)')">
-				<AcReferencePath>$(AC_NET_10_REF_PATH)</AcReferencePath>
-				<FrameworkMajorVer>10</FrameworkMajorVer>
-				<_Ver>10</_Ver>
-				<AcMinVer>2027</AcMinVer>
-				<AcMaxVer>2027</AcMaxVer>
-				<DefineConstants>$(DefineConstants);AUTOCAD_2020_OR_GREATER;AUTOCAD_2025_OR_GREATER;AUTOCAD_2027_OR_GREATER</DefineConstants>
-			</PropertyGroup>
+				<When Condition="$(TargetFramework.StartsWith('net10'))">
+					<PropertyGroup Condition="Exists('$(AC_NET_10_REF_PATH)')">
+						<AcRefPath>$(AC_NET_10_REF_PATH.TrimEnd('\'))</AcRefPath>
+						<FrameworkMajorVer>10</FrameworkMajorVer>
+						<_Ver>10</_Ver>
+						<AcMinVer>2027</AcMinVer>
+						<AcMaxVer>2027</AcMaxVer>
+						<DefineConstants>$(DefineConstants);AUTOCAD_2020_OR_GREATER;AUTOCAD_2025_OR_GREATER;AUTOCAD_2027_OR_GREATER</DefineConstants>
+					</PropertyGroup>
+				</When>
+			</Choose>
 		</When>
 	</Choose>
+
 
 </Project>
