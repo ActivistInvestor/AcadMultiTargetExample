@@ -271,7 +271,7 @@ First, you don't have to specify separate project references for each target fra
 
 ### Custom Build Logic
 
-The included `Directory.Build.props` and `Directory.Build.targets` files implement themulti-target build logic that is used by all projects in a solution, and all projects that use those files. These files serve to *vastly simplify* building AutoCAD extensions that use multi-targeting to target multiple AutoCAD/NET framework versions. The custom build logic *is not optional*, it is *required* to in order for AutoCAD extension projects that use multi-targeting to build correctly.
+The included `Directory.Build.props` and `Directory.Build.targets` files implement the multi-target build logic that is used by all projects in a solution, and all projects that use those files. These files serve to *vastly simplify* building AutoCAD extensions that use multi-targeting to target multiple AutoCAD/NET framework versions. The custom build logic *is not optional*, it is *required* to in order for AutoCAD extension projects that use multi-targeting to build correctly.
 
 `Directory.Build.props` and	`Directory.Build.targets` are designed to be *fully-reusable* and are not coupled to a specific project or solution. You can copy and use them in other multi-target AutoCAD projects as needed, with no changes required. You can have any number of projects share a single `Directory.Build.props` and `Directory.Build.targets` file, by placing them in any folder that contains the projects that are to use them. This *centralized build configuration* strategy allows many projects to use a single custom build configuration, without replicating the custom build logic in each project that uses it.
 
@@ -292,11 +292,11 @@ Hence, you do not (and should not) add references to those assemblies to any pro
 
 #### Building RealDwg Extensions
 
-The custom build logic in the included `Directory.Build.*` files recognize the `<RealDwgExtension>` property, which can be set to `true` in a .csproj file to prevent `AcMgd.dll` from being referenced, which is required in projects where the extension is to be loaded into a *RealDwg host application* such as AutoCAD Core Console:
+The custom build logic in the included `Directory.Build.*` files recognize the `<RealDwg>` property, which can be set to `true` in a .csproj file to prevent `AcMgd.dll` from being referenced, which is required in projects where the extension is to be loaded into a *RealDwg host application* such as AutoCAD Core Console:
 
 ```xml
 <PropertyGroup>
-    <RealDwgExtension>true</RealDwgExtension>
+    <RealDwg>true</RealDwg>
 </PropertyGroup>
 ```
 ### C# Language Issues
@@ -511,7 +511,7 @@ add the following to the .csproj file to suppress referencing  of `AcMgd.dll`:
 
 ```xml
    <PropertyGroup>
-      <RealDwgExtension>true</RealDwgExtension>
+      <RealDwg>true</RealDwg>
    </PropertyGroup>
 ```
 6. If an existing project includes references to AutoCAD assemblies other
@@ -573,7 +573,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 
 ## Centralized Custom Build Functionality
 
-In addition to managing multi-target projects, the custom build logic in the `Directory.Build.props` and `Directory.Build.targets` files provides custom build logic that supports test automation and common debugging tasks:
+In addition to managing multi-target projects, the custom build logic in the `Directory.Build.props` and `Directory.Build.targets` files supports common test automation and debugging support:
 	
 - Support for *startup* .dwg, .dwt, .lsp, and .scr files. Any of these file types can be automatically opened or loaded into AutoCAD when it is started in a debug session.
 
@@ -598,36 +598,36 @@ file types. All files are optional, and can have any name:
 		 
 ### Implicit NETLOAD
 		 
-The custom build system is designed to implicitly NETLOAD the debug target assembly into AutoCAD when a debug session is started. It does this using a dynamically-generated script (.scr) file that is passed a command line argument with the /b switch. The included build logic dynamically-generates *multiple* loader script files, one for each target framework, and places each in the build output folders along with each framework-specific output assembly. The script file has the same name as the output assembly. 
+The custom build system is designed to implicitly NETLOAD the debug target assembly into AutoCAD when a debug session is started. It does this using a dynamically-generated script (.scr) file that is passed as a command line argument with the /b switch.
+
+The included build logic dynamically-generates *multiple* loader script files, one for each target framework, and places each in the build output folders along with each framework-specific output assembly. The script file has the same name as the output assembly.
 		 
 The dynamically-generated loader script file performs three actions:
 		 
-- NETLOADs the correct, framework-specific debug target assembly. In a multi-target project there are multiple build output assemblies, one for each target framework. The loader script ensures that the correct one is loaded for the debug launch profile that's used.
+1. NETLOADs the correct, framework-specific debug target assembly. In a multi-target project there are multiple build output assemblies, one for each target framework. The loader script ensures that the correct one is loaded for the debug launch profile that's used.
 		 
-- If a LISP file is present in the *Startup* folder, or the path to a LISP file is specified in the `<StartupLisp/>` property, it loads the LISP file.
+2. If a LISP file is present in the *Startup* folder, or the path to a LISP file is specified in the `<StartupLisp/>` property, it loads the LISP file.
 
-- If a script file is present in the *Startup* folder, or the path to a script file is specified in the `<StartupScript/>` property, it executes the script file via the SCRIPT command.
+3. If a script file is present in the *Startup* folder, or the path to a script file is specified in the `<StartupScript/>` property, it executes the script file via the SCRIPT command.
 			
-This scheme offers the following adantages:
-- It enables script-based loading of the debug target assembly while also allowing a separate test script and/or LISP file to be loaded/run upon assembly load.
+This scheme offers a number of adantages:
+- It fully-automates loading of the debug target assembly, while also allowing a separate test script and/or LISP file to be run/loaded after the target assembly has been loaded.
 
-- It serves to decouple loading of the debug target from the test scripting and test LISP files. That allows the test script or LISP code to contain only test code or commands, and not have to deal with NETLOADing the debug target assembly explicitly.
+- It serves to decouple loading of the debug target from the test scripting and test LISP files. That allows the test script or LISP code to contain only test code or commands, and not have to deal with NETLOADing the debug target assembly explicitly. By decoupling the NETLOADing of the debug target assembly from the test script/lisp, the test script and/or LISP can be used repeatedly in the same AutoCAD session without redundantly issuing the NETLOAD command. 
 
 - Eliminates the complexity of resolving which of several target framework-specific debug target assemblies is to be loaded in multi-target projects, based on the debug profile used to start the debug session.
-
-- By decoupling the NETLOADing of the debug target assembly from the test script/lisp, the test script and/or LISP can be used repeatedly in the same AutoCAD session without redundantly issuing the NETLOAD command. 
 
 - Allows a single test script and/or LISP file to be used with all targeted frameworks/AutoCAD releases.
 
 ### Dynamically-generated Command Line
 
-The included build logic looks in the *Startup* folder for the presence of a .dwg/dwt, .scr and .lsp files, and generates the needed command line arguments to open the .dwg file and/or load the .lsp and/or .scr file when AutoCAD is started. In addition, it always adds the `/nologo` switch. 
+The included build logic looks in the *Startup* folder for the presence of .dwg, .dwt, .scr, and .lsp files, and generates the command line switches and arguments required to open a .dwg file and/or load/execute a LISP and/or script file when AutoCAD is started in a debug session.  
 
-To facilitate customization of the dynamically-generated command line, the build logic recognizes the `<AppendToCommandLine>` element that can be added to a project's .csproj file. In this element one can specify additional command line arguments/switches, which are appended to the dynamically-generated command line arguments.
+To support per-project customization of the dynamically-generated command line, the build logic recognizes the `<AppendToCommandLine>` element that can be added to a project's .csproj file. In this element one can specify additional command line arguments/switches, which are appended to the dynamically-generated command line.
 
-### Generic Property-driven launchSettings.json
+### Property-driven Launch Settings
 
-The included `launchSettings.json` file is generic, by virtue of the fact that it is almost entirely *property-driven*, using both MSBUILD properties defined by the custom build logic and each project that contains it, as well as environment variables that point to the folder containing the application executable to launch (usually acad.exe). 
+The included `launchSettings.json` file is generic, by virtue of its entirely *property-driven* nature, using both MSBUILD properties defined by the custom build logic and each project that uses it, and environment variables that point to the folders containing the application executables to launch (usually acad.exe). 
 
 That allows `launchSetting.json` to be *reusable* without changes, across multiple projects that use this custom build environment, and allows it to be portable across different systems where the paths to executable files and reference assemblies may differ. The included `launchSettings.json` file depends on the following environment variables, which must hold the location of the AutoCAD program executable for each targeted product release.
 
