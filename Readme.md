@@ -573,7 +573,7 @@ When a multi-target project is built, for each targeted framework version, a dia
 
 ## Automated Debugging Functionality
 
-In addition to managing multi-target projects, the custom build logic in the `Directory.Build.props` and `Directory.Build.targets` files supports common test automation and debugging support:
+In addition to managing multi-target projects, the custom build logic in the `Directory.Build.props` and `Directory.Build.targets` files supports common test automation and debugging tasks:
 	
 - Support for *startup* .dwg, .dwt, .lsp, and .scr files. Any of these file types can be automatically opened or loaded into AutoCAD when it is started in a debug session without having to explicitly specify them in a launch command line.
 
