@@ -27,12 +27,12 @@ NOTE: This documentation is in the process of being revised. More updates are pe
 - [Converting Existing Projects to use Multi-targeting](#converting-existing-projects-to-use-multi-targeting)
 - [Diagnostic Console Output](#diagnostic-console-output)
 - [Debug Startup Automation](#debug-startup-automation)
-  * [The *Startup* folder](#the-startup-folder)
   * [Implicit NETLOAD](#implicit-netload)
+  * [The *Startup* folder](#the-startup-folder)
   * [Dynamically-generated Command Line](#dynamically-generated-command-line)
   * [Property-driven Launch Settings](#property-driven-launch-settings)
   * [Customizable Build Parameters](#customizable-build-parameters)
-  * [Startup Automation Example](#startup-automation-example)
+  * [Startup Automation Example Project](#startup-automation-example)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -574,32 +574,24 @@ When a multi-target project is built, for each targeted framework version, a dia
 
 ## Debug Startup Automation
 
-*Debug startup automation* is the general term used to describe common debugging/startup tasks that the build system can initiate when AutoCAD is launched in the debugger, which are described in detail below:
+*Debug startup automation* is the general term used to describe common debugging startup tasks that the build system can initiate or stage when AutoCAD is launched in the debugger. These tasks are described in detail below. Startup automation tasks are staged using two basic methods:
 
-- Dynamic startup script generation: automates NETLOADing the debug target assembly into AutoCAD and optionally loads or executes a LISP or SCRIPT file when AutoCAD is started in a debug session.
+- *Dynamic startup script generation*: A script (.scr) file is dynamically generated during the build process, that fully-automates NETLOADing the debug target assembly into AutoCAD, and optionally loading and/or executing a LISP and/or SCRIPT file when AutoCAD is started in a debug session, after the debug target assembly has been NETLOADed.
 
-- Dynamic executable command line argument generation: loads the dynamically-generated startup script into AutoCAD and optionally opens a drawing file when AutoCAD is started in a debug session and optionally applys various other command line switches as directed by MSBUILD properties defined in each project. These MSBUILD properties are documented below.
+- *Dynamic launch command line argument generation*: The launch command line is dynamically generated to load the dynamically-generated startup script into AutoCAD, and optionally open a drawing file when AutoCAD is started in a debug session. It can also generate and add various other command line switches/arguments as directed by MSBUILD properties that can be defined in each project. These MSBUILD properties are documented below.
 
-Debug startup automation is *optional*, and must be explicitly enabled by setting the `<StartupAutomation/>` property in a .csproj file. This setting has *project scope* and can be set in each project in a solution. Debug startup automation provides the following functionality:
+### Opting-in To *Startup Automation*
+*Debug startup automation* is *optional*, and must be explicitly enabled by setting the `<StartupAutomation/>` property in a .csproj file. This setting has *project scope* and can be set in each project in a solution. 
+
+When enabled, *debug startup automation* provides the following basic functionality:
 	
-- <p>Support for *startup* .dwg, .dwt, .lsp, and .scr files. Any of these file types can be automatically opened or loaded into AutoCAD when started in a debug session without having to explicitly specify them using launch command line switches/arguments or script files. The developer can simply place these files in the *Startup* folder (see below) and the build system will generate the required command line switches and/or scripting needed to automatically open/load/execute them when AutoCAD is started in a debug session, after the debug target assembly has been automatically loaded.
+- Support for *startup* `.dwg`, `.dwt`, `.lsp`, and `.scr` files. Any of these file types can be automatically opened or loaded into AutoCAD when started in a debug session without having to explicitly specify them using launch command line switches/arguments or script files. The developer can simply place these files in the *Startup* folder (see below) and the build system will generate the required command line switches and/or scripting needed to automatically open/load/execute them when AutoCAD is started in a debug session, after the debug target assembly has been automatically NETLOADed.
 
-- Dynamically-generated, target framework-specific *loader script (.scr) files* that implicitly NETLOAD the debug target into AutoCAD when started in a debug session, eliminating the need for an explicit script file to NETLOAD the target. A distinct script file is generated for each targeted framework, ensuring that the correct debug target assembly is loaded into AutoCAD, based on the launch profile used to start the debug session.
+- Dynamically-generated, target framework-specific *loader script (.scr) files* that implicitly NETLOAD the debug target assembly into AutoCAD when started in a debug session, which eliminates the need for an explicit script file to NETLOAD the target. A distinct script file is generated for each targeted framework, ensuring that the correct debug target assembly is loaded into AutoCAD, based on the target framework of the launch profile used to start the debug session.
 
-- A dynamically-generated executable command line provides the needed switches/arguments required to load startup drwaing, LISP and script files. The build system also provides the option of adding additional command line switches/arguments on a per-project basis, by specifying them using a property assigned in a .csproj file.
+- A dynamically-generated executable launch command line provides the needed switches/arguments required to load startup drawing, LISP and script files. The build system also provides the option of adding additional command line switches/arguments on a per-project basis, by specifying them using a property assigned in a .csproj file (see below).
 
 - Highly-configurable and flexible build environment that gives the developer complete control over its behavior using MSBUILD properties.
-		 
-### The *Startup* folder
-		 
-If a folder having the name `"Startup"` resides in the root folder of the project, it can contain one of each the following file types. All files are optional, and can have any name:
-		 
-| File type | Description |
-|---|---|
-| `.dwg` | A drawing file to be opened when AutoCAD is started in a debug session.|
-| `.dwt` | A drawing template that is used to create a new drawing when AutoCAD is started in a debug session. This file *will not be used if a `.dwg` file is also present in the *Startup* folder*. To use a `.dwt` file to create a new drawing, remove any `.dwg` file from the *Startup* folder (or you can just give it a different file extension).|
-| `.scr` | A script file to be executed when AutoCAD starts in a debug session, after the debug target assembly has been loaded. The script file does not have to (*and must not*) NETLOAD the debug target assembly, as that is performed implicitly by a dynamically-generated script file passed as an AutoCAD command-line argument. If a `.scr` file is present in the *Startup* folder, the dynamically-generated loader script will execute that script file immediately after NETLOADing the debug target assembly. |
-|`.lsp`|A LISP file to be loaded at AutoCAD startup in a debug session after the debug target assembly has been NETLOADed. If a LISP file and a script file both exist, the LISP file is loaded *before* the script file is executed.|
 		 
 ### Implicit NETLOAD
 		 
@@ -616,16 +608,27 @@ The dynamically-generated loader script file performs three actions:
 3. If a script file is present in the *Startup* folder, or the path to a script file is specified in the `<StartupScript/>` property, it executes the script file via the SCRIPT command.
 			
 This scheme offers a number of adantages:
-- It fully-automates loading of the debug target assembly, while also allowing a separate test script and/or LISP file to be run/loaded after the target assembly has been loaded.
+- It *fully-automates* NETLOADing of the debug target assembly, while also allowing a separate test script and/or LISP file to be run/loaded after the target assembly has been loaded.
 
 - It serves to decouple loading of the debug target from the test scripting and test LISP files. That allows the test script or LISP code to contain only test code or commands, and not have to deal with NETLOADing the debug target assembly explicitly. By decoupling the NETLOADing of the debug target assembly from the test script/lisp, the test script and/or LISP can be used repeatedly in the same AutoCAD session without redundantly issuing the NETLOAD command. 
 
-- Eliminates the complexity of resolving which of several target framework-specific debug target assemblies is to be loaded in multi-target projects, based on the debug profile used to start the debug session.
+- Eliminates the complexity of resolving which of several target framework-specific debug target assemblies is to be loaded in multi-target projects, based on the target framework of the debug profile used to start the debug session.
 
 - Allows a single test script and/or LISP file to be used with all targeted frameworks/AutoCAD releases.
 
-Implicit NETLOADing of the debug target assembly can be disabled on a per-project basis, by setting the '<AutoNetLoad/>' property to false in a .csproj file. This property allows other startup automation functionality to be used without implicitly NETLOADing the debug target assembly, which can be useful in cases where that assembly is already loaded automatically at AutoCAD startup via the registry or an Autoloader bundle.
+Implicit NETLOADing of the debug target assembly can be disabled on a per-project basis, by setting the '<AutoNetLoad/>' property to false in a .csproj file. This property allows other *startup automation* functionality to be used without implicitly NETLOADing the debug target assembly, which can be useful in cases where that assembly is already loaded automatically at AutoCAD startup via the registry or an Autoloader bundle.
 
+### The *Startup* folder
+		 
+*Startup automation* is *folder- and file-driven*. If a folder having the name `"Startup"` resides in the root folder of the project, it can contain one of each the following file types. All files are optional, and can have any name:
+		 
+| File type | Description |
+|---|---|
+| `.dwg` | A drawing file to be opened when AutoCAD is started in a debug session.|
+| `.dwt` | A drawing template that is used to create a new drawing when AutoCAD is started in a debug session. This file *will not be used if a `.dwg` file is also present in the *Startup* folder*. To use a `.dwt` file to create a new drawing, remove any `.dwg` file from the *Startup* folder (or you can just give it a different file extension).|
+| `.scr` | A script file to be executed when AutoCAD starts in a debug session, after the debug target assembly has been NETLOADed. The script file does not have to (*and must not*) NETLOAD the debug target assembly, as that is performed implicitly by a dynamically-generated script file that's used to start AutoCAD, and will have already happened at the point when this script file executes.|
+|`.lsp`|A LISP file to be loaded at AutoCAD startup in a debug session after the debug target assembly has been NETLOADed. The LISP file *should not* NETLOAD the debug target assembly because at the point when the LISP file is loaded, that will have already happened. If a LISP file and a script file both exist, the LISP file is loaded *before* the script file is executed.|
+		 
 ### Dynamically-generated Command Line
 
 The included build logic looks in the *Startup* folder for the presence of .dwg, .dwt, .scr, and .lsp files, and generates the command line switches and arguments required to open a .dwg file and/or load/execute a LISP and/or script file when AutoCAD is started in a debug session.  
@@ -657,10 +660,10 @@ The custom build system recognizes a number of MSBUILD properties that can optio
 | `<StartupLisp/>`|<p>Can be used to override default probing of the *Startup* folder for a startup LISP file, allowing any `.lsp` file to be loaded at startup, by assigning its full path to this property.</p><p>A startup LISP file and startup SCRIPT file are *not mutually exclusive*. Either or both can be present in the *Startup* folder. If both are present, the startup script file is executed *after* the startup LISP file is loaded.
 | `<AppendToCommandLine/>`|<p>Can be used to add one or more additional switches/arguments to the dynamically-generated command line that is used to start AutoCAD in a debug session.</p><p>Note that the `/b <scriptfile>` swtich/argument *cannot be added to the command line arguments* via this property, because the custom build system always uses that switch to run a dynamically-generated loader script at AutoCAD startup.</p>
 `<CommandLineArgs/>`|<p>Can be used to ***completely override*** dynamic command-line generation, by assigning the entire command line to be used to start AutoCAD to this property.</p><p>If this property is assigned, *there is no dynamically-generated command line, and hence, no startup drawing or drawing template; startup LISP or script file used, and there is no dynamically-generated loader script to implicitly NETLOAD the debug target into AutoCAD*. When this property is assigned, all other properties shown in this table are ignored and have no effect.|
-|`<StartupAutomation/>`|<p>Enables or disables all dynamic debug startup functionality (e.g. dynamically-generated loader script and dynamically-generated command line switches/arguments needed to load the loader script and open/load a startup .dwg, .lsp, or .scr file).</p><p>When set to false, all debug startup automation functionality is disabled and there is no dynamically-generated loader script or dynamically-generated command line arguments passed to AutoCAD when started from a debug session. When set to false, *all other properties shown in this table except for `<CommandLineArgs>` are not used*.</p><p>Dynamic loader script and command line argument generation, and automatic loading of startup files is only applicable to projects that are loaded explicitly via NETLOAD or some other means such as the registry or a package bundle, and are usually set as the *Startup Project* in Visual Studio.</p><p>*The default value of this property is **false*** (e.g., no debug startup automation).</p></p><p>For projects that are loaded *indirectly* as a result of being referenced from another project, *this property should be set to false* in the .csproj file to opt-out of debug startup automation. This *an opt-in setting* that is *opt-out by default*. One would typically set this property to true if the project output must be manually NETLOADed into AutoCAD at the start of a debug session.</p>|
-|`<AutoNetload/>`|<p>Enables or disables implicit automatic NETLOADing of the debug target assembly when AutoCAD is started in a debug session and debug startup automation is enabled.</p><p>This property allows the use of debug startup automation without implicit NETLOADing, which is useful when the debug target assembly is automatically loaded via the Applications key in the registry, or by a package bundle. This property is only applicable when `<StartupAutomation/>` is set to `true`. The default value of this property is `true`. To disable implicit automatic NETLOADing, set this property to `false` in the .csproj file</p>|
-|`<ExecutableName/>`|The name of the executable that is started when a debug session begins. The default value is "acad.exe", but this property can be assigned to a different value in a .csproj file as needed (for example, "accoreconsole.exe"). This property is referenced from the bundled `launchSettings.json` file.|
-|`<KillTargetProcessOnBuild/>`|<p>Instructs the custom build system to terminate a running	instance of the debug target executable when the project is built, to prevent build failures that would result from not being able to write to the build output assembly because it is loaded into the debug target's process space.</p><p>The name of the executable that is killed is the value of the `<ExecutableName>` property, which is set to `"acad.exe"` by default.</p><p>**Important:** *Use this property with extreme care*, as the process is terminated *regardless of whether there are unsaved changes to one or more open DWG files*.
+|`<StartupAutomation/>`|<p>Enables or disables all dynamic debug startup functionality (e.g. dynamically-generated loader script and dynamically-generated command line switches/arguments needed to load the loader script and open/load a startup .dwg, .lsp, or .scr file).</p><p>When set to false, all *startup automation* functionality is disabled and there is no dynamically-generated loader script or dynamically-generated command line arguments passed to AutoCAD when started from a debug session. When set to false, *all other properties shown in this table except for `<CommandLineArgs>` are not used*.</p><p>Dynamic loader script and command line argument generation, and automatic loading of startup files is only applicable to projects that are loaded explicitly via NETLOAD or some other means such as the registry or a package bundle, and are usually set as the *Startup Project* in Visual Studio.</p><p>*The default value of this property is **false*** (e.g., no *startup automation*).</p></p><p>For projects that are loaded *indirectly* as a result of being referenced from another project, *this property should be set to false* in the .csproj file to opt-out of *startup automation*. This is *an opt-in setting* that is *opt-out by default*. One would typically set this property to true if the project output would otherwise have to be manually NETLOADed into AutoCAD at the start of a debug session.</p>|
+|`<AutoNetload/>`|<p>Enables or disables implicit automatic NETLOADing of the debug target assembly when AutoCAD is started in a debug session and *startup automation* is enabled.</p><p>This property allows the use of *startup automation* without implicit NETLOADing, which is useful when the debug target assembly is automatically loaded via the Applications key in the registry, or by a package bundle. This property is only applicable when `<StartupAutomation/>` is set to `true`. The default value of this property is `true`. To disable implicit automatic NETLOADing, set this property to `false` in the .csproj file</p>|
+|`<ExeName/>`|The name of the executable that is started when a debug session begins. The default value is "acad.exe", but this property can be assigned to a different value in a .csproj file as needed (for example, "accoreconsole.exe"). This property is referenced from the bundled `launchSettings.json` file.|
+|`<KillTargetProcessOnBuild/>`|<p>Instructs the custom build system to terminate a running	instance of the debug target executable when the project is built, to prevent build failures that would result from not being able to write to the build output assembly because it is loaded into the debug target's process space.</p><p>The name of the executable that is killed is the value of the `<ExeName>` property, which is set to `"acad.exe"` by default.</p><p>**Important:** *Use this property with extreme care*, as the process is terminated *regardless of whether there are unsaved changes to one or more open DWG files*.
 |`<DebugStartup/>`|A debugging switch that will cause the build system to display the values of internal variables used to generate the loader script and command line arguments in the Visual Studio output window.|
 
 
@@ -676,7 +679,7 @@ The following example illustrates the use of the `<AppendToCommandLine/>` proper
 
 ## Startup Automation Example
 	
-The included test/example project's output assembly needs to be NETLOADed into AutoCAD when a debug session starts. The test/example project shows how to leverage the *startup automation* functionality provided by the custom build environment, to perform automatic NETLOADing of the debug target assembly, and carry out other common startup tasks.
+The included test/example project's output assembly needs to be NETLOADed into AutoCAD when a debug session starts. The test/example project shows how to leverage the *startup automation* functionality provided by the custom build environment, to *fully-automate* NETLOADing of the debug target assembly, and perform other common startup tasks.
 
 The test/example project demonstrates how the build system *fully-automates* the staging of these tasks when a debug session is started:
    
@@ -688,12 +691,12 @@ The test/example project demonstrates how the build system *fully-automates* the
    * Implicit/automatic NETLOADing of the debug target assembly into AutoCAD.
       
    * Loading a LISP file after the debug target
-      assembly has been NETLOADed.
+      assembly has been NETLOADed (optional).
       
    * Running a SCRIPT file after the LISP file has
-      been loaded.
+      been loaded (optional).
       
-   Enabling startup automation functionality in a project requires nothing more than setting the *`<StartupAutomation>`* property to *true* in the .csproj file:
+   Enabling *startup automation* functionality in a project requires nothing more than setting the *`<StartupAutomation>`* property to *true* in the .csproj file:
 
    ```xml
 <PropertyGroup>
@@ -709,11 +712,11 @@ The test/example project demonstrates how the build system *fully-automates* the
    3. The `test.lsp` file is loaded.
    4. The `test.scr` file is run.
    
-   All of the above happens *without requiring the developer to write any script files, or specify executable command line switches or arguments.* IOW, it requires *zero-configuration*.
+   All of the above happens *without requiring the developer to write script files to NETLOAD the debug target, or specify executable launch command line switches and arguments.* IOW, it requires *zero-configuration*.
 
-   The developer only needs to create a folder with the name "Startup" in the root folder of a project, and in it place the *startup files* that are to be opened/loaded/executed when AutoCAD starts in a debug session. The custom build environement implicitly and dynamically generates the required command line switches and arguments, along with the startup scripting required to perform all of the tasks.
+   To automatically open a `.dwg` file, and/or load or execute a `.lsp` file or `.scr` file when AutoCAD is launched in the debugger, The developer only needs to create a folder with the name "Startup" in the root folder of the project, and in it place the *startup files* that are to be opened/loaded/executed when AutoCAD starts in a debug session. The custom build environement implicitly and dynamically generates the required command line switches and arguments, along with the startup scripting required to perform all of the tasks.
    
-   The "Startup" folder is completely optional. If it doesn't exist, the only task that's staged is NETLOADing the debug target assembly into AutoCAD.
+   The "Startup" folder and its contents are *completely optional*. If that folder doesn't exist (or contains no files), the only task that's staged is NETLOADing the debug target assembly into AutoCAD.
 
    A more-subtle and easily-overlooked aspect of *startup automation* is that in a multi-target project, there are *multiple debug target assemblies*, one for each targeted framework. Because the custom build environment is *multi-target aware*, it will always generate the scripting needed to select and load the correct debug target assembly into AutoCAD based on the launch profile's target framework.
 
